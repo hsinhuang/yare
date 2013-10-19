@@ -17,6 +17,7 @@ class NFA:
         self.map = {}
         self.start = None
         self.finals = []
+        self.epsilon_clos = {}
 
     def connect(self, from_node, to_node, edge):
         """
@@ -39,16 +40,19 @@ class NFA:
         """
         return the epsilon closure of the given node
         """
-        if node not in self.nodes:
-            return None
-        closure = set()
-        if node in self.map and EPSILON in self.map[node]:
-            closure.update(self.map[node][EPSILON])
-        new_closure = closure.copy()
-        for new_node in closure:
-            if self.epsilon_closure(new_node):
-                new_closure.update(self.epsilon_closure(new_node))
-        return list(new_closure)
+        if node not in self.epsilon_clos:
+            if node not in self.nodes:
+                return None
+            closure = set()
+            if node in self.map and EPSILON in self.map[node]:
+                closure.update(self.map[node][EPSILON])
+            new_closure = closure.copy()
+            for new_node in closure:
+                if self.epsilon_closure(new_node):
+                    new_closure.update(self.epsilon_closure(new_node))
+            new_closure.add(node)
+            self.epsilon_clos[node] = new_closure
+        return self.epsilon_clos[node]
 
     def validate(self, edges):
         """
@@ -65,7 +69,8 @@ class NFA:
             new_current = set()
             for node in current:
                 if node in self.map and edge in self.map[node]:
-                    new_current.update(self.map[node][edge])
+                    for next_node in self.map[node][edge]:
+                        new_current.update(self.epsilon_closure(next_node))
             current = new_current
         terminants = []
         for node in current:
