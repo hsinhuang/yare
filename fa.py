@@ -161,14 +161,6 @@ class FA:
             return None
         return self
 
-def __array2str__(arr):
-    """change array to string"""
-    return ','.join(str(x) for x in arr)
-
-def __str2array__(string):
-    """change string to array"""
-    return string.split(',')
-
 test1 = FA()
 test1\
 .connect(0, 1, EPSILON)\
