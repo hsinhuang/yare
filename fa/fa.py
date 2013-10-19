@@ -4,5 +4,5 @@
 """Finite Automata"""
 
 class FA:
-    def __init__:
+    def __init__():
         pass
