@@ -68,6 +68,13 @@ class FA:
                     new_nodes_set.add(tuple(key))
                     nodes_unmarked.add(tuple(key))
                 new.connect(node, tuple(key), edge)
+
+        new.set_start((self.start,))
+        for node in new.nodes:
+            for final in self.finals:
+                if final in node:
+                    new.add_final(node)
+                    break
         return new
 
     def is_deterministic(self):
