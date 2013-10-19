@@ -33,7 +33,7 @@ class FA:
 
     def minimize(self):
         """minimize the number of states of the DFA"""
-        assert self.is_deterministic()
+        assert self.is_dfa()
 
     def reachable(self, nodes, edge):
         """
@@ -52,7 +52,7 @@ class FA:
                         result.update(self.epsilon_closure(next_node))
         return (key, result)
 
-    def make_deterministic(self):
+    def make_dfa(self):
         """return a NFA corresponding to DFA"""
         new = FA()
         valid_acceptable = self.acceptable.copy()
@@ -77,7 +77,7 @@ class FA:
                     break
         return new
 
-    def is_deterministic(self):
+    def is_dfa(self):
         """whether the FA is deterministic """
         if EPSILON in self.acceptable:
             return False
