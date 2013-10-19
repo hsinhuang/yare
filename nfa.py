@@ -96,3 +96,27 @@ class NFA:
         else:
             return None
         return self
+
+test1 = NFA()
+test1\
+.connect(0, 1, EPSILON)\
+.connect(1, 2, EPSILON)\
+.connect(1, 3, EPSILON)\
+.connect(1, 7, EPSILON)\
+.connect(2, 4, 'a')\
+.connect(3, 5, 'b')\
+.connect(4, 6, EPSILON)\
+.connect(5, 6, EPSILON)\
+.connect(6, 1, EPSILON)\
+.connect(6, 7, EPSILON)\
+.connect(7, 8, EPSILON)\
+.connect(8, 9, 'a')\
+.connect(9, 10, EPSILON)\
+.connect(10, 11, EPSILON)\
+.connect(10, 12, EPSILON)\
+.connect(11, 13, 'a')\
+.connect(12, 14, 'b')\
+.connect(13, 15, EPSILON)\
+.connect(14, 15, EPSILON)\
+.set_start(0)\
+.add_final(15)
