@@ -16,7 +16,7 @@ class FA:
         self.nodes = set()
         self.map = {}
         self.start = None
-        self.finals = []
+        self.finals = set()
         self.epsilon_clos = {}
 
     def copy(self):
@@ -27,7 +27,7 @@ class FA:
         new.nodes = self.nodes.copy()
         new.map = deepcopy(self.map)
         new.start = self.start
-        self.finals = deepcopy(self.finals)
+        new.finals = self.finals.copy()
         self.epsilon_clos = deepcopy(self.epsilon_clos)
         return new
 
@@ -160,7 +160,7 @@ class FA:
     def add_final(self, node):
         """setter: final nodes"""
         if node in self.nodes:
-            self.finals.append(node)
+            self.finals.add(node)
         else:
             return None
         return self
