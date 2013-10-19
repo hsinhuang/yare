@@ -57,9 +57,49 @@ class FA:
         self.epsilon_clos = deepcopy(self.epsilon_clos)
         return new
 
+    def partition(self, group, groups):
+        """try to partition group"""
+        for edge in self.acceptable:
+            parti = {}
+            for node in group:
+                idx = [ list(self.map[node][edge])[0] in g for g in groups ]\
+                    .index(True)
+                parti.setdefault(idx, set())
+                parti[idx].add(node)
+                if len(parti) > 1:
+                    return [ parti[i] for i in parti ]
+        return None
+
     def minimize(self):
         """minimize the number of states of the DFA"""
         assert self.is_dfa()
+        groups = [self.finals, self.nodes.difference(self.finals)]
+        from copy import deepcopy
+        new_groups = deepcopy(groups)
+        parti = True
+        while parti:
+            delete = None
+            for group in groups:
+                parti = self.partition(group, groups)
+                if parti:
+                    delete = group
+                    break
+            if parti:
+                new_groups.remove(delete)
+                new_groups += parti
+                groups = deepcopy(new_groups)
+        new = FA()
+        divide = {}
+        for group in groups:
+            for node in group:
+                divide[node] = tuple(group)
+        for start in self.map:
+            for edge in self.map[start]:
+                for dst in self.map[start][edge]:
+                    new.connect(divide[start], divide[dst], edge)
+        new.set_start(divide[self.start])
+        _ = [new.add_final(divide[f]) for f in self.finals]
+        return new
 
     def reachable(self, nodes, edge):
         """
