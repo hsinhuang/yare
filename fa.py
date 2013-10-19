@@ -21,7 +21,13 @@ class FA:
 
     def is_deterministic(self):
         """whether the FA is deterministic """
-        return False
+        if EPSILON in self.acceptable:
+            return False
+        for node in self.map:
+            for edge in self.map[node]:
+                if len(self.map[node][edge]) > 1:
+                    return False
+        return True
 
     def connect(self, from_node, to_node, edge):
         """
