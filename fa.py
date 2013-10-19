@@ -19,6 +19,20 @@ class FA:
         self.finals = []
         self.epsilon_clos = {}
 
+    def copy(self):
+        new = FA()
+        from copy import deepcopy
+        new.acceptable = self.acceptable.copy()
+        new.nodes = self.nodes.copy()
+        new.map = deepcopy(self.map)
+        new.start = self.start
+        self.finals = deepcopy(self.finals)
+        self.epsilon_clos = deepcopy(self.epsilon_clos)
+        return new
+
+    def make_deterministic(self):
+        pass
+
     def is_deterministic(self):
         """whether the FA is deterministic """
         if EPSILON in self.acceptable:
