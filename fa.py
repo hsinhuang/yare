@@ -31,8 +31,40 @@ class FA:
         self.epsilon_clos = deepcopy(self.epsilon_clos)
         return new
 
+    def reachable(self, nodes, edge):
+        """
+        return all the reachable nodes from any of the node in
+        `nodes` via `edge`
+        """
+        if edge not in self.acceptable:
+            return None
+        result = set()
+        key = set()
+        for node in nodes:
+            for new_node in self.epsilon_closure(node):
+                if new_node in self.map and edge in self.map[new_node]:
+                    for next_node in self.map[new_node][edge]:
+                        key.add(next_node)
+                        result.update(self.epsilon_closure(next_node))
+        return (key, result)
+
     def make_deterministic(self):
-        pass
+        """return a NFA corresponding to DFA"""
+        new = FA()
+        valid_acceptable = self.acceptable.copy()
+        valid_acceptable.remove(EPSILON)
+        new_nodes_set = { (self.start,) }
+        nodes_unmarked = { (self.start,) }
+
+        while nodes_unmarked:
+            node = nodes_unmarked.pop()
+            for edge in valid_acceptable:
+                key, _ = self.reachable(node, edge)
+                if tuple(key) not in new_nodes_set:
+                    new_nodes_set.add(tuple(key))
+                    nodes_unmarked.add(tuple(key))
+                new.connect(node, tuple(key), edge)
+        return new
 
     def is_deterministic(self):
         """whether the FA is deterministic """
@@ -48,14 +80,14 @@ class FA:
         """
         >>> fa = FA()
         >>> fa.connect(0, 1, 'a')
-        self.map = { 0: { 'a': [1] } }
+        self.map = { 0: { 'a': {1} } }
         >>> fa.connect(0, 2, 'a').connect(1, 2, 'b')
-        self.map = { 0: { 'a': [1, 2] },
-                     1: { 'b': [2] } }
+        self.map = { 0: { 'a': {1, 2} },
+                     1: { 'b': {2} } }
         """
         self.map.setdefault(from_node, {})
-        self.map[from_node].setdefault(edge, [])
-        self.map[from_node][edge].append(to_node)
+        self.map[from_node].setdefault(edge, set())
+        self.map[from_node][edge].add(to_node)
         self.acceptable.add(edge)
         self.nodes.add(from_node)
         self.nodes.add(to_node)
@@ -72,6 +104,8 @@ class FA:
             if node in self.map and EPSILON in self.map[node]:
                 closure.update(self.map[node][EPSILON])
             new_closure = closure.copy()
+            if node in new_closure:
+                new_closure.remove(node)
             for new_node in closure:
                 if self.epsilon_closure(new_node):
                     new_closure.update(self.epsilon_closure(new_node))
@@ -126,6 +160,14 @@ class FA:
         else:
             return None
         return self
+
+def __array2str__(arr):
+    """change array to string"""
+    return ','.join(str(x) for x in arr)
+
+def __str2array__(string):
+    """change string to array"""
+    return string.split(',')
 
 test1 = FA()
 test1\
