@@ -20,6 +20,7 @@ class FA:
         self.epsilon_clos = {}
 
     def copy(self):
+        """deep copy"""
         new = FA()
         from copy import deepcopy
         new.acceptable = self.acceptable.copy()
