@@ -31,6 +31,10 @@ class FA:
         self.epsilon_clos = deepcopy(self.epsilon_clos)
         return new
 
+    def minimize(self):
+        """minimize the number of states of the DFA"""
+        assert self.is_deterministic()
+
     def reachable(self, nodes, edge):
         """
         return all the reachable nodes from any of the node in
