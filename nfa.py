@@ -64,7 +64,7 @@ class NFA:
         return the reachable finals when there are some,
         otherwise return an empty list
         """
-        current = {self.start}
+        current = self.epsilon_closure(self.start)
         for edge in edges:
             new_current = set()
             for node in current:
