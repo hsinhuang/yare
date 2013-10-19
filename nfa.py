@@ -41,7 +41,14 @@ class NFA:
         """
         if node not in self.nodes:
             return None
-
+        closure = []
+        if EPSILON in self.map[node]:
+            closure += self.map[node][EPSILON]
+        new_closure = closure
+        for clos in closure:
+            if self.epsilon_closure(clos):
+                new_closure += self.epsilon_closure(clos)
+        return new_closure
 
     def validate(self, edges):
         """
