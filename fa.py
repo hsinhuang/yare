@@ -19,6 +19,32 @@ class FA:
         self.finals = set()
         self.epsilon_clos = {}
 
+    def relabel(self):
+        """relabel the finite automata"""
+        new = FA()
+        relabel_map = dict(zip(self.nodes.difference({ self.start }),
+                               range(1, len(self.nodes))))
+        relabel_map[self.start] = 0
+        new.acceptable = self.acceptable.copy()
+        new.nodes = { relabel_map[old] for old in self.nodes }
+        new.map = { relabel_map[old]:
+                        { edge: { relabel_map[node]
+                                  for node in self.map[old][edge]
+                                }
+                          for edge in self.map[old]
+                        }
+                    for old in self.map
+                  }
+        new.start = relabel_map[self.start]
+        new.finals = { relabel_map[old] for old in self.finals }
+        self.epsilon_clos = { relabel_map[old]:
+                                { relabel_map[e]
+                                  for e in self.epsilon_clos[old]
+                                }
+                              for old in self.epsilon_clos
+                            }
+        return new
+
     def copy(self):
         """deep copy"""
         new = FA()
@@ -63,18 +89,16 @@ class FA:
         while nodes_unmarked:
             node = nodes_unmarked.pop()
             for edge in valid_acceptable:
-                key, _ = self.reachable(node, edge)
+                key, e_clos = self.reachable(node, edge)
                 if tuple(key) not in new_nodes_set:
                     new_nodes_set.add(tuple(key))
                     nodes_unmarked.add(tuple(key))
                 new.connect(node, tuple(key), edge)
+                for final in self.finals:
+                    if final in e_clos:
+                        new.add_final(tuple(key))
 
         new.set_start((self.start,))
-        for node in new.nodes:
-            for final in self.finals:
-                if final in node:
-                    new.add_final(node)
-                    break
         return new
 
     def is_dfa(self):
