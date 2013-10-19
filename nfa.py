@@ -41,14 +41,14 @@ class NFA:
         """
         if node not in self.nodes:
             return None
-        closure = []
-        if EPSILON in self.map[node]:
-            closure += self.map[node][EPSILON]
-        new_closure = closure
-        for clos in closure:
-            if self.epsilon_closure(clos):
-                new_closure += self.epsilon_closure(clos)
-        return new_closure
+        closure = set()
+        if node in self.map and EPSILON in self.map[node]:
+            closure.update(self.map[node][EPSILON])
+        new_closure = closure.copy()
+        for new_node in closure:
+            if self.epsilon_closure(new_node):
+                new_closure.update(self.epsilon_closure(new_node))
+        return list(new_closure)
 
     def validate(self, edges):
         """
