@@ -5,9 +5,9 @@
 
 EPSILON = r'\0'
 
-class NFA:
+class FA:
     """
-    Non-deterministic Finite Automata
+    Finite Automata
 
     EPSILON indicates epsilon
     """
@@ -18,6 +18,10 @@ class NFA:
         self.start = None
         self.finals = []
         self.epsilon_clos = {}
+
+    def is_deterministic(self):
+        """whether the FA is deterministic """
+        return False
 
     def connect(self, from_node, to_node, edge):
         """
@@ -56,9 +60,9 @@ class NFA:
 
     def validate(self, edges):
         """
-        validate if a string can be accepted by the NFA
+        validate if a string can be accepted by the FA
 
-        `edges` can be a string while all the edges of the NFA
+        `edges` can be a string while all the edges of the FA
         is characters
 
         return the reachable finals when there are some,
@@ -102,7 +106,7 @@ class NFA:
             return None
         return self
 
-test1 = NFA()
+test1 = FA()
 test1\
 .connect(0, 1, EPSILON)\
 .connect(1, 2, EPSILON)\

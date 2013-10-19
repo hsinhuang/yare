@@ -3,9 +3,7 @@
 
 """init file of the package"""
 
-import pyre.nfa as NFA
-import pyre.dfa as DFA
-import pyre.min_dfa as MDFA
+import pyre.fa as FA
 
 def compile(regex):
     """Compile a regular expression to minimal DFA"""
