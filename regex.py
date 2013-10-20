@@ -6,6 +6,7 @@
 from fa import FA, EPSILON
 
 ESCAPE = '\\'
+SPECIAL_SYMBOLS = '\\e|*()'
 
 class RegEx:
     """Regular Expression based on minimal DFA"""
@@ -36,10 +37,10 @@ def __split(pattern):
     """split pattern string to token list"""
     tokens = []
     in_escape = False
-    special_symbols = '\\e|*()'
+
     for char in pattern:
         if in_escape:
-            if char in special_symbols:
+            if char in SPECIAL_SYMBOLS:
                 tokens.append(ESCAPE+char if char != 'e' else EPSILON)
             else:
                 raise SyntaxWarning('escape symbol followed '
