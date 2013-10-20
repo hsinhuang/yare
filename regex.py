@@ -105,7 +105,7 @@ def __seeking_vertical_bar(tokens, start_idx):
         start_idx += 1
     return None
 
-def __parser(tokens):
+def __parse(tokens):
     """parse a pattern string to a syntax tree"""
     if not tokens:
         return None
@@ -120,7 +120,7 @@ def __parser(tokens):
                 raise SyntaxError("Parenthesis not matched, ", index)
             if rparen_idx+1 < num_tokens and tokens[rparen_idx+1] == '*':
                 rparen_idx += 1
-            selection.append(tokens[index:rparen_idx+1])
+            selection.append(__parse(tokens[index:rparen_idx+1]))
             index = rparen_idx+1
         elif current == ')':
             raise SyntaxError("Parenthesis redundant, ", index)
