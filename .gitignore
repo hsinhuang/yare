@@ -40,3 +40,6 @@ nosetests.xml
 *.swp
 *.swap
 *.tmp
+
+# yacc ouput
+*.out
