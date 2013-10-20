@@ -3,7 +3,9 @@
 
 """init file of the package"""
 
-from pyre.fa import FA, EPSILON
+from fa import FA, EPSILON
+
+ESCAPE = '\\'
 
 class RegEx:
     """Regular Expression based on minimal DFA"""
@@ -33,8 +35,21 @@ def match(regex, string):
 def __split(pattern):
     """split pattern string to token list"""
     tokens = []
-    for ch in pattern:
-        pass
+    in_escape = False
+    special_symbols = '\\e|*()'
+    for char in pattern:
+        if in_escape:
+            if char in special_symbols:
+                tokens.append(ESCAPE+char if char != 'e' else EPSILON)
+            else:
+                raise SyntaxWarning('escape symbol followed '
+                    'by a non-special symbol')
+            in_escape = False
+        else:
+            if char == ESCAPE:
+                in_escape = True
+            else:
+                tokens.append(char)
     return tokens
 
 def __grow_nfa(nfa, tokens, start_index=0):
@@ -54,6 +69,4 @@ def __grow_nfa(nfa, tokens, start_index=0):
 
 def compile(pattern):
     """Compile a regular expression to minimal DFA"""
-    escape = False
-    for ch in regex:
-        pass
+    pass
