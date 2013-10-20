@@ -182,8 +182,8 @@ class FA: #pylint: disable=W0212
             if node in new_closure:
                 new_closure.remove(node)
             for new_node in closure:
-                if self.__epsilon_closure(new_node):
-                    new_closure.update(self.__epsilon_closure(new_node))
+                if self.epsilon_closure(new_node):
+                    new_closure.update(self.epsilon_closure(new_node))
             new_closure.add(node)
             self.__epsilon_clos[node] = new_closure
         return self.__epsilon_clos[node]
@@ -198,13 +198,13 @@ class FA: #pylint: disable=W0212
         return the reachable finals when there are some,
         otherwise return an empty list
         """
-        current = self.__epsilon_closure(self.__start)
+        current = self.epsilon_closure(self.__start)
         for edge in edges:
             new_current = set()
             for node in current:
                 if node in self.__map and edge in self.__map[node]:
                     for next_node in self.__map[node][edge]:
-                        new_current.update(self.__epsilon_closure(next_node))
+                        new_current.update(self.epsilon_closure(next_node))
             current = new_current
         terminants = []
         for node in current:
