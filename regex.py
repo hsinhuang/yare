@@ -69,4 +69,7 @@ def __grow_nfa(nfa, tokens, start_index=0):
 
 def compile(pattern):
     """Compile a regular expression to minimal DFA"""
-    pass
+    tokens = __split(pattern)
+    nfa, start, final = __grow_nfa(FA(), tokens, 0)
+    nfa.set_start(start).add_final(final)
+    return RegEx(nfa, pattern)
