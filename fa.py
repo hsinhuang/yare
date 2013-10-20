@@ -19,6 +19,9 @@ class FA: #pylint: disable=W0212
         self.__finals = set()
         self.__epsilon_clos = {}
 
+    def map(self):
+        return self.__map
+
     def relabel(self):
         """relabel the finite automata"""
         new = FA()
@@ -173,8 +176,6 @@ class FA: #pylint: disable=W0212
         return the epsilon closure of the given node
         """
         if node not in self.__epsilon_clos:
-            if node not in self.__nodes:
-                return None
             closure = set()
             if node in self.__map and EPSILON in self.__map[node]:
                 closure.update(self.__map[node][EPSILON])

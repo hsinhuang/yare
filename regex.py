@@ -3,14 +3,53 @@
 
 """init file of the package"""
 
-from fa import FA, EPSILON
+from fa import FA
 
-ESCAPE = '\\'
-SPECIAL_SYMBOLS = '\\e|*()'
+class State:
+    """state"""
+    count = 0
+    def __init__(self):
+        self.name = State.count
+        self.move = {}
+        State.count += 1
+    def __eq__(self, state):
+        assert state.__class__ == State
+        return self.name == state.name
+    def link(self, state, edge):
+        """link to state via edge"""
+        print type(edge)
+        self.move.setdefault(edge, [])
+        if state not in self.move[edge]:
+            self.move[edge].append(state)
+        return state
 
-SELECT = 'selection'
-CONCAT = 'concatenation'
-LOOP   = 'loop'
+class StateGraph:
+    """state graph"""
+    def __init__(self, start=None, final=None):
+        self.start = start
+        self.final = final
+    def all_states(self, from_state):
+        """all states in the graph from the from_state"""
+        alls = [ from_state ]
+        for edge in from_state.move:
+            for node in from_state.move[edge]:
+                if node not in alls:
+                    alls.append(node)
+            for next_state in from_state.move[edge]:
+                for node in self.all_states(next_state):
+                    if node not in alls:
+                        alls.append(node)
+        return alls
+    def make_nfa(self):
+        """make NFA from the state graph"""
+        nfa = FA()
+        for current in self.all_states(self.start):
+            for edge in current.move:
+                for next_node in current.move[edge]:
+                    nfa.connect(current.name, next_node.name, edge)
+        nfa.set_start(self.start.name)
+        nfa.add_final(self.final.name)
+        return nfa
 
 class RegEx:
     """Regular Expression based on minimal DFA"""
@@ -31,128 +70,3 @@ class RegEx:
     def pattern(self):
         """getter: pattern"""
         return self.__pattern
-
-
-def match(regex, string):
-    """whether the `string` matches `regex`"""
-    return regex.match(string)
-
-def __split(pattern):
-    """split pattern string to token list"""
-    tokens = []
-    in_escape = False
-
-    for char in pattern:
-        if in_escape:
-            if char in SPECIAL_SYMBOLS:
-                tokens.append(ESCAPE+char if char != 'e' else EPSILON)
-            else:
-                raise SyntaxWarning('escape symbol followed '
-                    'by a non-special symbol')
-            in_escape = False
-        else:
-            if char == ESCAPE:
-                in_escape = True
-            else:
-                tokens.append(char)
-    return tokens
-
-__matched_rparen = {}
-
-def __seeking_rparen(tokens, start_idx):
-    """
-    return the index of matched right parenthesis in tokens
-    of the left parenthesis in `start_idx`
-    """
-    assert tokens[start_idx] == '('
-    tokens_str = ''.join(tokens)
-    if tokens_str not in __matched_rparen:
-        __matched_rparen.setdefault(tokens_str, {})
-    if start_idx not in __matched_rparen[tokens_str]:
-        __matched_rparen[tokens_str][start_idx] = \
-            __seeking_rparen_noncached(tokens, start_idx)
-    return __matched_rparen[tokens_str][start_idx]
-
-def __seeking_rparen_noncached(tokens, start_idx):
-    """
-    return the index of matched right parenthesis in tokens
-    of the left parenthesis in `start_idx`
-
-    this version do not cache
-    """
-    assert tokens[start_idx] == '('
-    start_idx += 1
-    while start_idx < len(tokens):
-        current = tokens[start_idx]
-        if current == ')':
-            return start_idx
-        if current == '(':
-            start_idx = __seeking_rparen(tokens, start_idx)
-        start_idx += 1
-    return None
-
-def __seeking_vertical_bar(tokens, start_idx):
-    """
-    return the index of fisrt vertical bar in tokens,
-    or None if there is a '(' or ')' before it
-    """
-    while start_idx < len(tokens):
-        current = tokens[start_idx]
-        if current == '|':
-            return start_idx
-        elif current in '()':
-            return None
-        start_idx += 1
-    return None
-
-def __parse(tokens):
-    """parse a pattern string to a syntax tree"""
-    if not tokens:
-        return None
-    num_tokens = len(tokens)
-    selection = []
-    index = 0
-    while index < num_tokens:
-        current = tokens[index]
-        if current == '(':
-            rparen_idx = __seeking_rparen(tokens, index)
-            if not rparen_idx:
-                raise SyntaxError("Parenthesis not matched, ", index)
-            if rparen_idx+1 < num_tokens and tokens[rparen_idx+1] == '*':
-                rparen_idx += 1
-            selection.append(__parse(tokens[index:rparen_idx+1]))
-            index = rparen_idx+1
-        elif current == ')':
-            raise SyntaxError("Parenthesis redundant, ", index)
-        elif current == '|':
-            raise SyntaxError("Vertical bar not valid, ", index)
-        elif current == '*':
-            raise SyntaxError("Star not valid, ", index)
-        elif current == '\\':
-            raise SyntaxError("Backslash not valid, ", index)
-        else:
-            bar_idx = __seeking_vertical_bar(tokens, index)
-            if not bar_idx:
-
-
-def __grow_nfa(nfa, tokens, start_index=0):
-    """
-    grow the given nfa
-
-    params: nfa         - the one should be grew
-            tokens      - grow based on the tokens
-            start_index - the new part of nfa start from it
-
-    return: (new_nfa, start_node, end_node)
-            new_nfa    - new nfa
-            start_node - start node of the new nfa
-            end_node   - end node of the new nfa
-    """
-    return nfa, tokens, start_index
-
-def compile(pattern):
-    """Compile a regular expression to minimal DFA"""
-    tokens = __split(pattern)
-    nfa, start, final = __grow_nfa(FA(), tokens, 0)
-    nfa.set_start(start).add_final(final)
-    return RegEx(nfa, pattern)
