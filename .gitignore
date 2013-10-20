@@ -43,3 +43,4 @@ nosetests.xml
 
 # yacc ouput
 *.out
+parsetab.py
