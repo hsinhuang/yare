@@ -8,7 +8,7 @@ Supported Syntax
 ----
 
 In total, syntax supported by the library is the most basic ones.
-As following decribed in detail:
+As following described in detail:
 
 1. selection: `a|b`
 
@@ -29,3 +29,10 @@ Special Symbol
 3. `*`: loop. To indicate star, use `\*` instead.
 
 4. `(` and `)`: group. To indicate parentheses, use `\(` and `\)` instead.
+
+
+Acceptable Alphabet
+----
+
+All lower case letters and the special symbols mentioned above in
+section `Special Symbol`.
