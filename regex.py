@@ -3,7 +3,7 @@
 
 """init file of the package"""
 
-from fa import FA, EPSILON
+from pyre.fa import FA, EPSILON
 
 ESCAPE = '\\'
 SPECIAL_SYMBOLS = '\\e|*()'
