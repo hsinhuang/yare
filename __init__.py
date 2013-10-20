@@ -3,8 +3,5 @@
 
 """init file of the package"""
 
-import pyre.fa as FA
-
-def compile(regex):
-    """Compile a regular expression to minimal DFA"""
-    return regex
+from pyre.fa import FA, EPSILON
+from pyre.regex import RegEx, compile, match
