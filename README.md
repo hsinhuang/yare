@@ -29,3 +29,9 @@ Special Symbol
 3. `*`: loop. To indicate star, use `\*` instead.
 
 4. `(` and `)`: group. To indicate parentheses, use `\(` and `\)` instead.
+
+
+Honor Code
+----
+
+You should **not** copy it to complete your homework.
