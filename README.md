@@ -34,4 +34,4 @@ Special Symbol
 Honor Code
 ----
 
-You should **not** copy it to complete your homework.
+You should **NOT** copy it to complete your homework.
