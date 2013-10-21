@@ -3,7 +3,7 @@
 
 """init file of the package"""
 
-from fa import FA
+from pyre.fa import FA
 
 class State:
     """state"""
@@ -17,7 +17,6 @@ class State:
         return self.name == state.name
     def link(self, state, edge):
         """link to state via edge"""
-        print type(edge)
         self.move.setdefault(edge, [])
         if state not in self.move[edge]:
             self.move[edge].append(state)
@@ -28,18 +27,16 @@ class StateGraph:
     def __init__(self, start=None, final=None):
         self.start = start
         self.final = final
-    def all_states(self, from_state):
-        """all states in the graph from the from_state"""
-        alls = [ from_state ]
-        for edge in from_state.move:
-            for node in from_state.move[edge]:
-                if node not in alls:
-                    alls.append(node)
-            for next_state in from_state.move[edge]:
-                for node in self.all_states(next_state):
-                    if node not in alls:
-                        alls.append(node)
-        return alls
+        self.__all_states = []
+    def all_states(self, start):
+        """return all states in the graph from the start state"""
+        if start in self.__all_states:
+            return self.__all_states
+        self.__all_states.append(start)
+        for edge in start.move:
+            for next_state in start.move[edge]:
+                self.all_states(next_state)
+        return self.__all_states
     def make_nfa(self):
         """make NFA from the state graph"""
         nfa = FA()
@@ -53,9 +50,8 @@ class StateGraph:
 
 class RegEx:
     """Regular Expression based on minimal DFA"""
-    def __init__(self, nfa, pattern):
-        dfa = nfa.relabel().make_dfa().relabel()
-        self.__dfa = dfa.minimize().relabel()
+    def __init__(self, nfa, pattern, dfa=False):
+        self.__fa = nfa.make_dfa().minimize().relabel() if dfa else nfa
         self.__pattern = pattern
 
     def match(self, string):
@@ -63,10 +59,24 @@ class RegEx:
         If `string` matches the regex, then return the string,
         otherwise return None
         """
-        if self.__dfa.validate(string):
+        if self.__fa.validate(string):
             return string
         return None
 
     def pattern(self):
         """getter: pattern"""
         return self.__pattern
+
+def compile(pattern, dfa=True):
+    """compile a pattern to RegEx"""
+    from pyre.reyacc import build
+    graph = build(pattern)
+    nfa = graph.make_nfa()
+    return RegEx(nfa, pattern, dfa)
+
+def match(regex, string):
+    """
+    If `string` matches the regex, then return the string,
+    otherwise return None
+    """
+    return regex.match(string)

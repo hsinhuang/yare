@@ -62,15 +62,33 @@ class FA: #pylint: disable=W0212
 
     def partition(self, group, groups):
         """try to partition group"""
-        for edge in self.__acceptable:
-            parti = {}
-            for node in group:
-                idx = [ list(self.__map[node][edge])[0] in g for g in groups ]\
-                    .index(True)
-                parti.setdefault(idx, set())
-                parti[idx].add(node)
-                if len(parti) > 1:
-                    return [ parti[i] for i in parti ]
+        if len(group) < 2:
+            return None
+        acceptable_edges = {}
+        # partition based on acceptable edges
+        for node in group:
+            edges = set()
+            if node in self.__map:
+                for edge in self.__acceptable:
+                    if edge in self.__map[node]:
+                        edges.add(edge)
+            acceptable_edges.setdefault(tuple(edges), set())
+            acceptable_edges[tuple(edges)].add(node)
+        parti = []
+        for edges in acceptable_edges:
+            local_parti = {}
+            for node in acceptable_edges[edges]:
+                edge_next_pair = set()
+                for edge in edges:
+                    idx = [ list(self.__map[node][edge])[0] in g
+                            for g in groups ].index(True)
+                    edge_next_pair.add((edge, idx))
+                edge_next_t = tuple(edge_next_pair)
+                local_parti.setdefault(edge_next_t, set())
+                local_parti[edge_next_t].add(node)
+            parti += [ list(local_parti[p]) for p in local_parti ]
+        if len(parti) > 1:
+            return parti
         return None
 
     def minimize(self):
@@ -125,7 +143,8 @@ class FA: #pylint: disable=W0212
         """return a NFA corresponding to DFA"""
         new = FA()
         valid_acceptable = self.__acceptable.copy()
-        valid_acceptable.remove(EPSILON)
+        if EPSILON in valid_acceptable:
+            valid_acceptable.remove(EPSILON)
         new_nodes_set = { (self.__start,) }
         nodes_unmarked = { (self.__start,) }
 
@@ -133,6 +152,8 @@ class FA: #pylint: disable=W0212
             node = nodes_unmarked.pop()
             for edge in valid_acceptable:
                 key, e_clos = self.reachable(node, edge)
+                if not key:
+                    continue
                 if tuple(key) not in new_nodes_set:
                     new_nodes_set.add(tuple(key))
                     nodes_unmarked.add(tuple(key))
@@ -140,8 +161,13 @@ class FA: #pylint: disable=W0212
                 for final in self.__finals:
                     if final in e_clos:
                         new.add_final(tuple(key))
+                        break
 
         new.set_start((self.__start,))
+        for final in self.__finals:
+            if final in self.epsilon_closure(self.__start):
+                new.add_final((self.__start,))
+                break
         return new
 
     def is_dfa(self):
@@ -236,27 +262,3 @@ class FA: #pylint: disable=W0212
         else:
             return None
         return self
-
-test1 = FA()
-test1\
-.connect(0, 1, EPSILON)\
-.connect(1, 2, EPSILON)\
-.connect(1, 3, EPSILON)\
-.connect(1, 7, EPSILON)\
-.connect(2, 4, 'a')\
-.connect(3, 5, 'b')\
-.connect(4, 6, EPSILON)\
-.connect(5, 6, EPSILON)\
-.connect(6, 1, EPSILON)\
-.connect(6, 7, EPSILON)\
-.connect(7, 8, EPSILON)\
-.connect(8, 9, 'a')\
-.connect(9, 10, EPSILON)\
-.connect(10, 11, EPSILON)\
-.connect(10, 12, EPSILON)\
-.connect(11, 13, 'a')\
-.connect(12, 14, 'b')\
-.connect(13, 15, EPSILON)\
-.connect(14, 15, EPSILON)\
-.set_start(0)\
-.add_final(15)

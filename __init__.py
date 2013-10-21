@@ -3,5 +3,4 @@
 
 """init file of the package"""
 
-from pyre.fa import FA, EPSILON
-from pyre.regex import RegEx, compile, match
+from pyre.regex import compile, match
