@@ -15,7 +15,7 @@ from pyre.fa import EPSILON
 # Get the token map from the lexer
 
 def p_re_termvre(p):
-    're : term VBAR re'
+    're : terms VBAR re'
     s0 = State()
     s1 = State()
     p[0] = StateGraph(s0, s1)
@@ -24,13 +24,17 @@ def p_re_termvre(p):
     p[1].final.link(s1, EPSILON)
     p[3].final.link(s1, EPSILON)
 
+def p_re_terms(p):
+    're : terms'
+    p[0] = p[1]
+
 def p_re_termre(p):
-    're : term re'
+    'terms : term terms'
     p[1].final.link(p[2].start, EPSILON)
     p[0] = StateGraph(p[1].start, p[2].final)
 
 def p_re_term(p):
-    're : term'
+    'terms : term'
     p[0] = p[1]
 
 def p_term_res(p):
