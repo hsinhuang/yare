@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding:utf-8
 
+#pylint: disable=C0103
+
 """tokenizer for the re implemented in the package"""
 
 import ply.lex as lex
