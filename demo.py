@@ -7,6 +7,6 @@ import pyre
 
 regex = pyre.compile('(a|b)*a(a|b)')
 print regex.match('aa')
-# >>> 'aa'
+# >>> True
 print pyre.match(regex, 'aab')
-# >>> 'aab'
+# >>> True
