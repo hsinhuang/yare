@@ -9,7 +9,7 @@ import random
 import unittest
 import pyre
 
-class TestCaseSimpleSelection(unittest.TestCase):
+class TestSimpleSelection(unittest.TestCase):
     """simple test case: selection"""
     def setUp(self):
         """compile a regex"""
@@ -23,7 +23,7 @@ class TestCaseSimpleSelection(unittest.TestCase):
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
 
-class TestCaseSimpleConcatenation(unittest.TestCase):
+class TestSimpleConcatenation(unittest.TestCase):
     """simple test case: concatenation"""
     def setUp(self):
         """compile a regex"""
@@ -37,7 +37,7 @@ class TestCaseSimpleConcatenation(unittest.TestCase):
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
 
-class TestCaseSimpleLoop(unittest.TestCase):
+class TestSimpleLoop(unittest.TestCase):
     """simple test case: loop"""
     def setUp(self):
         """compile a regex"""
