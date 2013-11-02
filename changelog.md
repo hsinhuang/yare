@@ -17,6 +17,8 @@ the input string
 
 + add test cases
 
++ raise exception when pattern cannot be parsed
+
 
 v0.1.0
 ----
