@@ -11,7 +11,7 @@ It is fit for teaching and learning.
 It is compatible with both Python 2 and Python 3.
 """,
     license="""GPL v2""",
-    version = "0.2",
+    version = "0.2.1",
     author = "Leonardo Huang",
     author_email = "leon@njuopen",
     maintainer = "Leonardo Huang",
