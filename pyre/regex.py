@@ -67,6 +67,13 @@ class RegEx:
         """getter: pattern"""
         return self.__pattern
 
+    def match_prefix(self, string):
+        """
+        return the maximum index that makes self.match(string[:index])
+        True
+        """
+        pass
+
 def compile(pattern, dfa=True):
     """compile a pattern to RegEx"""
     from pyre.reyacc import build
