@@ -71,6 +71,8 @@ def compile(pattern, dfa=True):
     """compile a pattern to RegEx"""
     from pyre.reyacc import build
     graph = build(pattern)
+    if not graph:
+        raise SyntaxError("pattern `%s` cannot be parsed" % pattern)
     nfa = graph.make_nfa()
     return RegEx(nfa, pattern, dfa)
 
