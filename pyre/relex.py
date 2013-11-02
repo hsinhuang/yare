@@ -60,4 +60,4 @@ def t_error(t):
     raise SyntaxError("Illegal character '%s'" % t.value[0])
 
 # Build the lexer
-lexer = lex.lex()
+lexer = lex.lex(optimize=1, debug=0, lextab='')

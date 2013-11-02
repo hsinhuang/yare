@@ -112,7 +112,7 @@ def p_error(p):
     raise SyntaxError()
 
 # Build the parser
-parser = yacc.yacc()
+parser = yacc.yacc(optimize=1, debug=0, write_tables=0)
 
 def build(pattern):
     """build a state graph based on the pattern"""
