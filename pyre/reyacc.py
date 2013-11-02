@@ -109,7 +109,7 @@ def p_factor_normal(p):
 
 # Error rule for syntax errors
 def p_error(p):
-    print "Syntax error in input:", p
+    raise SyntaxError()
 
 # Build the parser
 parser = yacc.yacc()

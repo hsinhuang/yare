@@ -57,8 +57,7 @@ t_NORMAL       = r'.'
 
 # Error handling rule
 def t_error(t):
-    print "Illegal character '%s'" % t.value[0]
-    t.lexer.skip(1)
+    raise SyntaxError("Illegal character '%s'" % t.value[0])
 
 # Build the lexer
 lexer = lex.lex()
