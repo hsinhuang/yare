@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding:utf-8
 
+#pylint: disable=C0103
+
 """parser for the re implemented in the package"""
 
 import ply.yacc as yacc
