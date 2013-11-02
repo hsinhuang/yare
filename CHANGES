@@ -1,0 +1,8 @@
+Version 0.2
+----------------
+
+11/02/2013: leon-huang
+            change syntax of accepted regular expression to lower the precedence of `|` (now it is the lowest)
+            method `match` returns Boolean value instead of neither `None` or the input string
+            raise exception when pattern cannot be parsed
+            add test cases, change log
