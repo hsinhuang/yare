@@ -60,8 +60,8 @@ class RegEx:
         otherwise return None
         """
         if self.__fa.validate(string):
-            return string
-        return None
+            return True
+        return False
 
     def pattern(self):
         """getter: pattern"""

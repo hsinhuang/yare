@@ -34,17 +34,17 @@ def t_RVBAR(t):
 
 def t_RSTAR(t):
     r'\\\*'
-    t.value = r'\*'
+    t.value = '*'
     return t
 
 def t_RLPAREN(t):
     r'\\\('
-    t.value = r'\('
+    t.value = '('
     return t
 
 def t_RRPAREN(t):
     r'\\\)'
-    t.value = r'\)'
+    t.value = ')'
     return t
 
 t_VBAR         = r'\|'
