@@ -222,8 +222,7 @@ class FA: #pylint: disable=W0212
         `edges` can be a string while all the edges of the FA
         is characters
 
-        return the reachable finals when there are some,
-        otherwise return an empty list
+        return True if any final node is reachable, otherwise False
         """
         current = self.epsilon_closure(self.__start)
         for edge in edges:
@@ -233,11 +232,30 @@ class FA: #pylint: disable=W0212
                     for next_node in self.__map[node][edge]:
                         new_current.update(self.epsilon_closure(next_node))
             current = new_current
-        terminants = []
-        for node in current:
-            if node in self.__finals:
-                terminants.append(node)
-        return terminants
+        return self.__any_terminant__(current)
+
+    def try_match(self, edges):
+        """
+        try to match string as long as possible
+
+        return the maximum index that makes self.validate(edges[:index])
+        True, if there is no such index, return 0
+
+        `edges` can be a string while all the edges of the FA
+        is characters
+        """
+        idx = 0
+        current = self.epsilon_closure(self.__start)
+        for i, edge in enumerate(edges):
+            new_current = set()
+            for node in current:
+                if node in self.__map and edge in self.__map[node]:
+                    for next_node in self.__map[node][edge]:
+                        new_current.update(self.epsilon_closure(next_node))
+            current = new_current
+            if self.__any_terminant__(current):
+                idx = i+1
+        return idx
 
     def start_node(self):
         """getter: start node"""
@@ -262,3 +280,12 @@ class FA: #pylint: disable=W0212
         else:
             return None
         return self
+
+    def __any_terminant__(self, nodes):
+        """
+        whether at least a terminant exists in `nodes`
+        """
+        for node in nodes:
+            if node in self.__finals:
+                return True
+        return False

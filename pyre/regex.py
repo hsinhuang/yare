@@ -59,9 +59,7 @@ class RegEx:
         If `string` matches the regex, then return the string,
         otherwise return None
         """
-        if self.__fa.validate(string):
-            return True
-        return False
+        return self.__fa.validate(string)
 
     def pattern(self):
         """getter: pattern"""
@@ -70,9 +68,13 @@ class RegEx:
     def match_prefix(self, string):
         """
         return the maximum index that makes self.match(string[:index])
-        True
+        True, if there is no such index, return 0
+
+        Note: you can *NEVER* judge whether `string` matches `regex` only
+        from this method's return value, because regex like `'a|\\e'`
+        matches empty string but this method will return 0 in this case
         """
-        pass
+        return self.__fa.try_match(string)
 
 def compile(pattern, dfa=True):
     """compile a pattern to RegEx"""
@@ -95,3 +97,14 @@ def match(regex, string):
     otherwise return None
     """
     return regex.match(string)
+
+def match_prefix(regex, string):
+    """
+    return the maximum index that makes self.match(string[:index])
+    True, if there is no such index, return 0
+
+    Note: you can *NEVER* judge whether `string` matches `regex` only
+    from this method's return value, because regex like `'a|\\e'` matches
+    empty string but this method will return 0 in this case
+    """
+    return regex.match_prefix(string)

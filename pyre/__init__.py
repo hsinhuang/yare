@@ -3,4 +3,4 @@
 
 """init file of the package"""
 
-from pyre.regex import compile, match
+from .regex import compile, match
