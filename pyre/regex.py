@@ -27,16 +27,16 @@ class StateGraph:
     def __init__(self, start=None, final=None):
         self.start = start
         self.final = final
-        self.__all_states = []
+        self.__all_states__ = []
     def all_states(self, start):
         """return all states in the graph from the start state"""
-        if start in self.__all_states:
-            return self.__all_states
-        self.__all_states.append(start)
+        if start in self.__all_states__:
+            return self.__all_states__
+        self.__all_states__.append(start)
         for edge in start.move:
             for next_state in start.move[edge]:
                 self.all_states(next_state)
-        return self.__all_states
+        return self.__all_states__
     def make_nfa(self):
         """make NFA from the state graph"""
         nfa = FA()
@@ -51,19 +51,19 @@ class StateGraph:
 class RegEx:
     """Regular Expression based on minimal DFA"""
     def __init__(self, nfa, pattern, dfa=False):
-        self.__fa = nfa.make_dfa().minimize().relabel() if dfa else nfa
-        self.__pattern = pattern
+        self.__fa__ = nfa.make_dfa().minimize().relabel() if dfa else nfa
+        self.__pattern__ = pattern
 
     def match(self, string):
         """
         If `string` matches the regex, then return the string,
         otherwise return None
         """
-        return self.__fa.validate(string)
+        return self.__fa__.validate(string)
 
     def pattern(self):
         """getter: pattern"""
-        return self.__pattern
+        return self.__pattern__
 
     def match_prefix(self, string):
         """
@@ -74,7 +74,7 @@ class RegEx:
         from this method's return value, because regex like `'a|\\e'`
         matches empty string but this method will return 0 in this case
         """
-        return self.__fa.try_match(string)
+        return self.__fa__.try_match(string)
 
 def compile(pattern, dfa=True):
     """compile a pattern to RegEx"""
