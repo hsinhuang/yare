@@ -4,13 +4,13 @@
 """init file of the package"""
 
 import string
-from .utils import selection
+from .utils import select
 
 # useful regular expression definition
 EPSILON = '\\e'
-DIGIT = selection(list(string.digits))
-LOWERCASE = selection(list(string.lowercase))
-UPPERCASE = selection(list(string.uppercase))
-WHITESPACE = selection(list(string.whitespace))
-PUNCTUATION = selection(list(string.punctuation))
-WILDCARD = selection(list(string.printable))
+DIGIT = select(list(string.digits))
+LOWERCASE = select(list(string.lowercase))
+UPPERCASE = select(list(string.uppercase))
+WHITESPACE = select(list(string.whitespace))
+PUNCTUATION = select(list(string.punctuation))
+WILDCARD = select(list(string.printable))

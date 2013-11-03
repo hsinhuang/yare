@@ -26,8 +26,8 @@ class TestUtils(unittest.TestCase):
         for case in cases:
             self.assertEqual(pyre.group(case[0]), case[1])
 
-    def test_selection(self):
-        """test : selection"""
+    def test_select(self):
+        """test : select"""
         cases = [
             (['a'], '(a)'),
             (['a', 'b'], '(a|b)'),
@@ -37,10 +37,10 @@ class TestUtils(unittest.TestCase):
             (['a|b', 'c|a'], '(a|b|c|a)'),
         ]
         for case in cases:
-            self.assertEqual(pyre.selection(case[0]), case[1])
+            self.assertEqual(pyre.select(case[0]), case[1])
 
-    def test_concatenation(self):
-        """test : concatenation"""
+    def test_concat(self):
+        """test : concat"""
         cases = [
             (list('abcde'), '(abcde)'),
             (list('(abcde)'), '(\(abcde\))'),
@@ -48,7 +48,7 @@ class TestUtils(unittest.TestCase):
             (['a'], '(a)'),
         ]
         for case in cases:
-            self.assertEqual(pyre.concatenation(case[0]), case[1])
+            self.assertEqual(pyre.concat(case[0]), case[1])
 
     def test_loop(self):
         """test : loop"""
@@ -68,13 +68,13 @@ class TestUtils(unittest.TestCase):
         for case in cases:
             self.assertEqual(pyre.diff(case[0]), case[1])
 
-    def test_nonempty_loop(self):
-        """test : nonempty_loop"""
+    def test_loop_(self):
+        """test : loop_"""
         cases = [
             ('abcde', '((abcde)((abcde)*))'),
         ]
         for case in cases:
-            self.assertEqual(pyre.nonempty_loop(case[0]), case[1])
+            self.assertEqual(pyre.loop_(case[0]), case[1])
 
     def test_optional(self):
         """test : optional"""

@@ -39,7 +39,7 @@ def group(pattern):
         raise TypeError('require type `str`, but get `%s`' % pattern)
     return '(' + ''.join(escape(pattern)) + ')'
 
-def selection(patterns):
+def select(patterns):
     """
     return a regex string which means a selection between `patterns`
     """
@@ -47,7 +47,7 @@ def selection(patterns):
         raise TypeError('require iterable, but get `%s`' % patterns)
     return group('|'.join([escape(pattern) for pattern in patterns]))
 
-def concatenation(patterns):
+def concat(patterns):
     """
     return a regex string which means a concatenation of `patterns`
     """
@@ -63,7 +63,7 @@ def loop(pattern):
         raise TypeError('require type `str`, but get `%s`' % pattern)
     return group(group(''.join(escape(pattern))) + '*')
 
-def nonempty_loop(pattern):
+def loop_(pattern):
     """
     return a regex string which means a loop of `pattern`
 
@@ -84,7 +84,7 @@ def diff(patterns):
         raise TypeError('require iterable, but get `%s`' % patterns)
     all_letters = set(string.printable)
     valid_letters = all_letters.difference(set(patterns))
-    return selection(valid_letters)
+    return select(valid_letters)
 
 def optional(pattern):
     """
@@ -94,7 +94,7 @@ def optional(pattern):
     """
     if type(pattern) != str:
         raise TypeError('require type `str`, but get `%s`' % pattern)
-    return selection([pattern, '\\e'])
+    return select([pattern, '\\e'])
 
 def range(start, end):
     """
@@ -109,6 +109,6 @@ def range(start, end):
         raise TypeError('require type `str`, but get `%s`' % end)
     assert start < end and len(start) == len(end) == 1
     all_letters = string.printable
-    return selection(
+    return select(
         all_letters[all_letters.index(start):all_letters.index((end))]
     )
