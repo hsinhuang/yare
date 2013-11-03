@@ -91,3 +91,16 @@ def optional(pattern):
     """
     assert not hasattr(pattern, '__iter__')
     return selection([pattern, '\\e'])
+
+def range(start, end):
+    """
+    return a regex string which means all letters from `start` to `end`,
+    both included
+
+    similiar to `[start-end]` in other regular expression language
+    """
+    assert start < end
+    all_letters = string.printable
+    return selection(
+        all_letters[all_letters.index(start):all_letters.index((end))]
+    )
