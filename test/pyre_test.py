@@ -21,6 +21,20 @@ class TestSimpleEpsilon(unittest.TestCase):
             self.assertTrue(self.__regex__.match(case))
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
+    def test_match_prefix(self):
+        """test method `match_prefix`"""
+        positive = [ 'a', '' ]
+        negative = [ ' ', '\\', '\\e' ]
+        partial = [
+            ('a|\\e', 1),
+            ('a\\e', 1),
+        ]
+        for case in positive:
+            self.assertEqual(self.__regex__.match_prefix(case), len(case))
+        for case in negative:
+            self.assertEqual(self.__regex__.match_prefix(case), 0)
+        for case in partial:
+            self.assertEqual(self.__regex__.match_prefix(case[0]), case[1])
 
 class TestSimpleSelection(unittest.TestCase):
     """simple test case: selection"""
@@ -35,6 +49,20 @@ class TestSimpleSelection(unittest.TestCase):
             self.assertTrue(self.__regex__.match(case))
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
+    def test_match_prefix(self):
+        """test method `match_prefix`"""
+        positive = [ 'a', 'b' ]
+        negative = [ '', ' ', '\\', '\\e', 'c' ]
+        partial = [
+            ('ab', 1),
+            ('a|b', 1),
+        ]
+        for case in positive:
+            self.assertEqual(self.__regex__.match_prefix(case), len(case))
+        for case in negative:
+            self.assertEqual(self.__regex__.match_prefix(case), 0)
+        for case in partial:
+            self.assertEqual(self.__regex__.match_prefix(case[0]), case[1])
 
 class TestSimpleConcatenation(unittest.TestCase):
     """simple test case: concatenation"""
@@ -49,6 +77,20 @@ class TestSimpleConcatenation(unittest.TestCase):
             self.assertTrue(self.__regex__.match(case))
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
+    def test_match_prefix(self):
+        """test method `match_prefix`"""
+        positive = [ 'ab' ]
+        negative = [ '', ' ', '\\', '\\e', 'a', 'b' ]
+        partial = [
+            ('aba', 2),
+            ('abab', 2),
+        ]
+        for case in positive:
+            self.assertEqual(self.__regex__.match_prefix(case), len(case))
+        for case in negative:
+            self.assertEqual(self.__regex__.match_prefix(case), 0)
+        for case in partial:
+            self.assertEqual(self.__regex__.match_prefix(case[0]), case[1])
 
 class TestSimpleLoop(unittest.TestCase):
     """simple test case: loop"""
@@ -62,6 +104,19 @@ class TestSimpleLoop(unittest.TestCase):
             self.assertFalse(self.__regex__.match(case))
         for dup in xrange(0, 1000, 7):
             self.assertTrue(self.__regex__.match('a' * dup))
+    def test_match_prefix(self):
+        """test method `match_prefix`"""
+        negative = [ ' ', '\\', '\\e', 'b' ]
+        partial = [
+            ('ab', 1),
+            ('aaabababab', 3),
+        ]
+        for case in negative:
+            self.assertEqual(self.__regex__.match_prefix(case), 0)
+        for dup in xrange(0, 1000, 7):
+            self.assertEqual(self.__regex__.match_prefix('a' * dup), dup)
+        for case in partial:
+            self.assertEqual(self.__regex__.match_prefix(case[0]), case[1])
 
 class TestCase1(unittest.TestCase):
     """complex test case 1"""
@@ -76,6 +131,21 @@ class TestCase1(unittest.TestCase):
             self.assertTrue(self.__regex__.match(case))
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
+    def test_match_prefix(self):
+        """test method `match_prefix`"""
+        positive = [ 'b', 'ab', 'aab', 'cd' ]
+        negative = [ '', ' ', '\\', '\\e', 'd', 'ad', 'acd', 'a*b|cd' ]
+        partial = [
+            ('bcd', 1),
+            ('aabcd', 3),
+            ('cdaab', 2),
+        ]
+        for case in positive:
+            self.assertEqual(self.__regex__.match_prefix(case), len(case))
+        for case in negative:
+            self.assertEqual(self.__regex__.match_prefix(case), 0)
+        for case in partial:
+            self.assertEqual(self.__regex__.match_prefix(case[0]), case[1])
 
 class TestCase2(unittest.TestCase):
     """complex test case 2"""
@@ -91,6 +161,22 @@ class TestCase2(unittest.TestCase):
             self.assertTrue(self.__regex__.match(case))
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
+    def test_match_prefix(self):
+        """test method `match_prefix`"""
+        positive = [ 'bd', 'abd', 'acd', 'cd' ]
+        negative = [ '', ' ', '\\', '\\e', 'bcd', 'abcd', 'bc', 'd',
+            'a*(b|c)d' ]
+        partial = [
+            ('bda', 2),
+            ('cdcd', 2),
+            ('acdabcd', 3),
+        ]
+        for case in positive:
+            self.assertEqual(self.__regex__.match_prefix(case), len(case))
+        for case in negative:
+            self.assertEqual(self.__regex__.match_prefix(case), 0)
+        for case in partial:
+            self.assertEqual(self.__regex__.match_prefix(case[0]), case[1])
 
 class TestCase3(unittest.TestCase):
     """complex test case 3"""
@@ -106,6 +192,22 @@ class TestCase3(unittest.TestCase):
             self.assertTrue(self.__regex__.match(case))
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
+    def test_match_prefix(self):
+        """test method `match_prefix`"""
+        positive = [ 'bd', 'abd', 'ac)d', 'c)d' ]
+        negative = [ '', ' ', '\\', '\\e', 'acd', 'ac\)d', 'c\)d',
+            'a*(b|c\))d' ]
+        partial = [
+            ('bda', 2),
+            ('c)dcd', 3),
+            ('ac)dabcd', 4),
+        ]
+        for case in positive:
+            self.assertEqual(self.__regex__.match_prefix(case), len(case))
+        for case in negative:
+            self.assertEqual(self.__regex__.match_prefix(case), 0)
+        for case in partial:
+            self.assertEqual(self.__regex__.match_prefix(case[0]), case[1])
 
 class TestCase4(unittest.TestCase):
     """complex test case 4"""
@@ -120,6 +222,21 @@ class TestCase4(unittest.TestCase):
             self.assertTrue(self.__regex__.match(case))
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
+    def test_match_prefix(self):
+        """test method `match_prefix`"""
+        positive = [ 'a*bd', 'acd' ]
+        negative = [ '', ' ', '\\', '\\e', 'abd', 'a\*bd', 'a(\*b|c)d' ]
+        partial = [
+            ('a*bda', 4),
+            ('acdcd', 3),
+            ('acdabcd', 3),
+        ]
+        for case in positive:
+            self.assertEqual(self.__regex__.match_prefix(case), len(case))
+        for case in negative:
+            self.assertEqual(self.__regex__.match_prefix(case), 0)
+        for case in partial:
+            self.assertEqual(self.__regex__.match_prefix(case[0]), case[1])
 
 class TestCase5(unittest.TestCase):
     """complex test case 5"""
@@ -128,12 +245,26 @@ class TestCase5(unittest.TestCase):
         self.__regex__ = pyre.compile('a*b\|cd')
     def test_match(self):
         """test method `match`"""
-        positive = [ 'b|cd', 'ab|cd' ]
+        positive = [ 'b|cd', 'ab|cd', 'aaab|cd' ]
         negative = [ '', ' ', '\\', '\\e', 'ab', 'cd', 'a*b\|cd' ]
         for case in positive:
             self.assertTrue(self.__regex__.match(case))
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
+    def test_match_prefix(self):
+        """test method `match_prefix`"""
+        positive = [ 'b|cd', 'ab|cd', 'aaab|cd' ]
+        negative = [ '', ' ', '\\', '\\e', 'ab', 'cd', 'a*b\|cd' ]
+        partial = [
+            ('aaab|cdd', 7),
+            ('aaab|cdab|cd', 7),
+        ]
+        for case in positive:
+            self.assertEqual(self.__regex__.match_prefix(case), len(case))
+        for case in negative:
+            self.assertEqual(self.__regex__.match_prefix(case), 0)
+        for case in partial:
+            self.assertEqual(self.__regex__.match_prefix(case[0]), case[1])
 
 class TestCase6(unittest.TestCase):
     """complex test case 6"""
@@ -150,6 +281,24 @@ class TestCase6(unittest.TestCase):
                 self.assertTrue(self.__regex__.match('a'*dup + case))
         for case in negative:
             self.assertFalse(self.__regex__.match(case))
+    def test_match_prefix(self):
+        """test method `match_prefix`"""
+        positive = [ 'aaaa', 'abbb', 'abab', 'abba', 'aabb', 'aaab',
+            'aaba', 'abaa' ]
+        negative = [ '', ' ', '\\', '\\e', '(a|b)*a(a|b)(a|b)(a|b)' ]
+        partial = [
+            ('aaaac', 4),
+            ('abbab', 4),
+            ('bbababa', 6),
+        ]
+        for case in positive:
+            for dup in xrange(0, 100, 7):
+                self.assertEqual(self.__regex__.match_prefix('a'*dup + case),
+                    dup+len(case))
+        for case in negative:
+            self.assertEqual(self.__regex__.match_prefix(case), 0)
+        for case in partial:
+            self.assertEqual(self.__regex__.match_prefix(case[0]), case[1])
 
 class TestException(unittest.TestCase):
     """test case : exception"""
