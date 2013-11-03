@@ -39,7 +39,7 @@ def group(pattern):
     """
     return a regex string which contains pattern in a group
     """
-    return '(' + ''.join(escape[pattern]) + ')'
+    return '(' + ''.join(escape([pattern])) + ')'
 
 def selection(patterns):
     """
@@ -60,7 +60,7 @@ def loop(pattern):
     return a regex string which means a loop of `pattern`
     """
     assert not hasattr(pattern, '__iter__')
-    return group(group(''.join(escape([pattern]))) + '*')
+    return group(group(''.join(escape(pattern))) + '*')
 
 def diff(patterns):
     """
@@ -81,7 +81,7 @@ def nonempty_loop(pattern):
     similiar to `((pattern)+)` in other regular expression language
     """
     assert not hasattr(pattern, '__iter__')
-    return group(group(''.join(escape([pattern]))) + loop(pattern))
+    return group(group(''.join(escape(pattern))) + loop(pattern))
 
 def optional(pattern):
     """
@@ -99,7 +99,7 @@ def range(start, end):
 
     similiar to `[start-end]` in other regular expression language
     """
-    assert start < end
+    assert start < end and len(start) == 1 and len(end) == 1
     all_letters = string.printable
     return selection(
         all_letters[all_letters.index(start):all_letters.index((end))]
