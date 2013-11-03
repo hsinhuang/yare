@@ -6,6 +6,8 @@ useful helper functions
 
 all function only accept normal letter as parameter, i.e., you should
 *NOT* escape the letter before you passed it to the functions
+
+all return values are escaped except `group`
 """
 
 import string
@@ -24,6 +26,7 @@ def escape(patterns):
 
     return a list
     """
+    assert hasattr(patterns, '__iter__') or type(patterns) == str
     escaped = []
     for pattern in patterns:
         if pattern in ESCAPE_TABLE:
@@ -42,19 +45,22 @@ def selection(patterns):
     """
     return a regex string which means a selection between `patterns`
     """
+    assert hasattr(patterns, '__iter__') or type(patterns) == str
     return group('|'.join(escape(patterns)))
 
 def concatenation(patterns):
     """
     return a regex string which means a concatenation of `patterns`
     """
+    assert hasattr(patterns, '__iter__') or type(patterns) == str
     return group(''.join(escape(patterns)))
 
 def loop(pattern):
     """
     return a regex string which means a loop of `pattern`
     """
-    return group(group(pattern) + '*')
+    assert not hasattr(pattern, '__iter__')
+    return group(group(''.join(escape(pattern))) + '*')
 
 def diff(patterns):
     """
@@ -63,6 +69,7 @@ def diff(patterns):
 
     similiar to `(^patterns)` in other regular expression language
     """
+    assert hasattr(patterns, '__iter__') or type(patterns) == str
     all_letters = set(string.printable)
     valid_letters = all_letters.difference(set(patterns))
     return selection(valid_letters)
@@ -73,7 +80,8 @@ def nonempty_loop(pattern):
 
     similiar to `((pattern)+)` in other regular expression language
     """
-    return group(group(pattern) + loop(pattern))
+    assert not hasattr(pattern, '__iter__')
+    return group(group(''.join(escape(pattern))) + loop(pattern))
 
 def optional(pattern):
     """
@@ -81,4 +89,5 @@ def optional(pattern):
 
     similiar to `((pattern)?)` in other regular expression language
     """
+    assert not hasattr(pattern, '__iter__')
     return selection([pattern, '\\e'])
