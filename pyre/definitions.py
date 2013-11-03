@@ -8,9 +8,9 @@ from .utils import selection
 
 # useful regular expression definition
 EPSILON = '\\e'
-DIGIT = selection(string.digits)
-LOWER = selection(string.lowercase)
-UPPER = selection(string.uppercase)
-WHITESPACE = selection(string.whitespace)
-PUNCTUATION = selection(string.punctuation)
-WILDCARD = selection(string.printable)
+DIGITS = string.digits
+LOWERCASE = string.lowercase
+UPPERCASE = string.uppercase
+WHITESPACE = string.whitespace
+PUNCTUATION = string.punctuation
+WILDCARD = string.printable
