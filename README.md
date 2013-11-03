@@ -68,6 +68,21 @@ Special Symbol
 4. `(` and `)`: group. To indicate parentheses, use `\(` and `\)` instead.
 
 
+Best Practice
+----
+
+I strongly recommend you use the provided functions and constants
+ rather than writing literally.
+
+I have several good reasons for this. First, the code will be more
+easy to read. Even some one who hasn't learnt the syntax can read your
+code. Second, I am considering expand the syntax, and then I can
+optimize for effeciency in the provided functions. Third, maybe
+some day I consider the syntax ugly and then changed it, if you only
+use the provided functions, you don't need to change a simgle line
+of your code.
+
+
 Honor Code
 ----
 
