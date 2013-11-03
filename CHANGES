@@ -3,6 +3,8 @@ Version 0.3
 
 11/03/2013: leon-huang
             add a method `match_prefix`
+            refactor: instance variable name
+
 
 Version 0.2
 ----------------
