@@ -33,9 +33,9 @@ class FA:
         new.__nodes__ = { relabel_map[old] for old in self.__nodes__ }
         new.__map__ = { relabel_map[old]:
                         { edge: { relabel_map[node]
-                                  for node in self.__map[old][edge]
+                                  for node in self.__map__[old][edge]
                                 }
-                          for edge in self.__map[old]
+                          for edge in self.__map__[old]
                         }
                     for old in self.__map__
                   }
@@ -43,7 +43,7 @@ class FA:
         new.__finals__ = { relabel_map[old] for old in self.__finals__ }
         self.__epsilon_clos__ = { relabel_map[old]:
                                 { relabel_map[e]
-                                  for e in self.__epsilon_clos[old]
+                                  for e in self.__epsilon_clos__[old]
                                 }
                               for old in self.__epsilon_clos__
                             }
