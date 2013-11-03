@@ -100,6 +100,20 @@ def p_factor_rvbar(p):
     p[0] = StateGraph(s0, s1)
     s0.link(s1, p[1])
 
+def p_factor_rslash(p):
+    'factor : RSLASH'
+    s0 = State()
+    s1 = State()
+    p[0] = StateGraph(s0, s1)
+    s0.link(s1, p[1])
+
+def p_factor_newline(p):
+    'factor : NEWLINE'
+    s0 = State()
+    s1 = State()
+    p[0] = StateGraph(s0, s1)
+    s0.link(s1, p[1])
+
 def p_factor_normal(p):
     'factor : NORMAL'
     s0 = State()

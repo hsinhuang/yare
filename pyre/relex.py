@@ -16,10 +16,12 @@ tokens = (
    'RSTAR',
    'RLPAREN',
    'RRPAREN',
+   'RSLASH',
    'VBAR',
    'STAR',
    'LPAREN',
    'RPAREN',
+   'NEWLINE',
    'NORMAL'
 )
 
@@ -49,10 +51,16 @@ def t_RRPAREN(t):
     t.value = ')'
     return t
 
+def t_RSLASH(t):
+    r'\\\\'
+    t.value = '\\'
+    return t
+
 t_VBAR         = r'\|'
 t_STAR         = r'\*'
 t_LPAREN       = r'\('
 t_RPAREN       = r'\)'
+t_NEWLINE      = r'\n'
 t_NORMAL       = r'.'
 
 # Error handling rule
