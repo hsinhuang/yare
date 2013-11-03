@@ -12,10 +12,9 @@ class TestUtils(unittest.TestCase):
     """test utils.py"""
     def test_escape(self):
         """test : escape"""
-        cases = [
-            ('abcde', list('abcde')),
-            ('()|*\\ea', ['\(', '\)', '\|', '\*', '\\\\', 'e', 'a']),
-        ]
+        cases = zip(list('abcde'), list('abcde')) + \
+            zip('()|*\\ea',
+                ['\(', '\)', '\|', '\*', '\\\\', 'e', 'a'])
         for case in cases:
             self.assertEqual(pyre.escape(case[0]), case[1])
 
@@ -30,8 +29,8 @@ class TestUtils(unittest.TestCase):
     def test_selection(self):
         """test : selection"""
         cases = [
-            ('a', '(a)'),
-            ('ab', '(a|b)'),
+            (['a'], '(a)'),
+            (['a', 'b'], '(a|b)'),
             (['ab', '\\e'], '(ab|\\e)'),
             (['a|b'], '(a|b)'),
             (['a|b', 'c'], '(a|b|c)'),
@@ -43,8 +42,8 @@ class TestUtils(unittest.TestCase):
     def test_concatenation(self):
         """test : concatenation"""
         cases = [
-            ('abcde', '(abcde)'),
-            ('(abcde)', '(\(abcde\))'),
+            (list('abcde'), '(abcde)'),
+            (list('(abcde)'), '(\(abcde\))'),
             (['a', 'b'], '(ab)'),
             (['a'], '(a)'),
         ]
@@ -55,7 +54,7 @@ class TestUtils(unittest.TestCase):
         """test : loop"""
         cases = [
             ('abcde', '((abcde)*)'),
-            ('(abcde)', '((\(abcde\))*)'),
+            ('(abcde)', '(((abcde))*)'),
         ]
         for case in cases:
             self.assertEqual(pyre.loop(case[0]), case[1])
@@ -64,7 +63,7 @@ class TestUtils(unittest.TestCase):
         """test : diff"""
         import string
         cases = [
-            (string.printable, '()'),
+            (list(string.printable), '()'),
         ]
         for case in cases:
             self.assertEqual(pyre.diff(case[0]), case[1])
@@ -73,7 +72,6 @@ class TestUtils(unittest.TestCase):
         """test : nonempty_loop"""
         cases = [
             ('abcde', '((abcde)((abcde)*))'),
-            ('(abcde)', '((\(abcde\))((\(abcde\))*))'),
         ]
         for case in cases:
             self.assertEqual(pyre.nonempty_loop(case[0]), case[1])

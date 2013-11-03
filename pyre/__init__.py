@@ -5,6 +5,6 @@
 
 from .regex import compile, match
 from .utils import escape, group, selection, concatenation, loop, \
-    diff, nonempty_loop, optional, range
+    nonempty_loop, diff, optional, range
 from .definitions import EPSILON, DIGIT, LOWERCASE, UPPERCASE, \
     WHITESPACE, PUNCTUATION, WILDCARD

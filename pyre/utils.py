@@ -20,47 +20,58 @@ ESCAPE_TABLE = {
     ')' : '\)',
 }
 
-def escape(patterns):
+def escape(pattern):
     """
-    escape the letter in `patterns`
-
-    return a list
+    escape the `pattern`
     """
-    assert hasattr(patterns, '__iter__') or type(patterns) == str
-    escaped = []
-    for pattern in patterns:
-        if pattern in ESCAPE_TABLE:
-            escaped.append(ESCAPE_TABLE[pattern])
-        else:
-            escaped.append(pattern)
-    return escaped
+    if type(pattern) != str:
+        raise TypeError('require type `str`, but get `%s`' % pattern)
+    if pattern in ESCAPE_TABLE:
+        return ESCAPE_TABLE[pattern]
+    else:
+        return pattern
 
 def group(pattern):
     """
     return a regex string which contains pattern in a group
     """
-    return '(' + ''.join(escape([pattern])) + ')'
+    if type(pattern) != str:
+        raise TypeError('require type `str`, but get `%s`' % pattern)
+    return '(' + ''.join(escape(pattern)) + ')'
 
 def selection(patterns):
     """
     return a regex string which means a selection between `patterns`
     """
-    assert hasattr(patterns, '__iter__') or type(patterns) == str
-    return group('|'.join(escape(patterns)))
+    if not hasattr(patterns, '__iter__'):
+        raise TypeError('require iterable, but get `%s`' % patterns)
+    return group('|'.join([escape(pattern) for pattern in patterns]))
 
 def concatenation(patterns):
     """
     return a regex string which means a concatenation of `patterns`
     """
-    assert hasattr(patterns, '__iter__') or type(patterns) == str
-    return group(''.join(escape(patterns)))
+    if not hasattr(patterns, '__iter__'):
+        raise TypeError('require iterable, but get `%s`' % patterns)
+    return group(''.join([escape(pattern) for pattern in patterns]))
 
 def loop(pattern):
     """
     return a regex string which means a loop of `pattern`
     """
-    assert not hasattr(pattern, '__iter__')
+    if type(pattern) != str:
+        raise TypeError('require type `str`, but get `%s`' % pattern)
     return group(group(''.join(escape(pattern))) + '*')
+
+def nonempty_loop(pattern):
+    """
+    return a regex string which means a loop of `pattern`
+
+    similiar to `((pattern)+)` in other regular expression language
+    """
+    if type(pattern) != str:
+        raise TypeError('require type `str`, but get `%s`' % pattern)
+    return group(group(''.join(escape(pattern))) + loop(pattern))
 
 def diff(patterns):
     """
@@ -69,19 +80,11 @@ def diff(patterns):
 
     similiar to `(^patterns)` in other regular expression language
     """
-    assert hasattr(patterns, '__iter__') or type(patterns) == str
+    if not hasattr(patterns, '__iter__'):
+        raise TypeError('require iterable, but get `%s`' % patterns)
     all_letters = set(string.printable)
     valid_letters = all_letters.difference(set(patterns))
     return selection(valid_letters)
-
-def nonempty_loop(pattern):
-    """
-    return a regex string which means a loop of `pattern`
-
-    similiar to `((pattern)+)` in other regular expression language
-    """
-    assert not hasattr(pattern, '__iter__')
-    return group(group(''.join(escape(pattern))) + loop(pattern))
 
 def optional(pattern):
     """
@@ -89,7 +92,8 @@ def optional(pattern):
 
     similiar to `((pattern)?)` in other regular expression language
     """
-    assert not hasattr(pattern, '__iter__')
+    if type(pattern) != str:
+        raise TypeError('require type `str`, but get `%s`' % pattern)
     return selection([pattern, '\\e'])
 
 def range(start, end):
@@ -99,7 +103,11 @@ def range(start, end):
 
     similiar to `[start-end]` in other regular expression language
     """
-    assert start < end and len(start) == 1 and len(end) == 1
+    if type(start) != str:
+        raise TypeError('require type `str`, but get `%s`' % start)
+    if type(end) != str:
+        raise TypeError('require type `str`, but get `%s`' % end)
+    assert start < end and len(start) == len(end) == 1
     all_letters = string.printable
     return selection(
         all_letters[all_letters.index(start):all_letters.index((end))]
