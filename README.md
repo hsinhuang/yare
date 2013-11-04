@@ -1,4 +1,4 @@
-pyre
+Yet Another Regular Expression
 ====
 
 A simple Python regular expression library.

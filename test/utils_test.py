@@ -6,7 +6,7 @@
 """unit test cases for the package"""
 
 import unittest
-import pyre
+import yare
 
 class TestUtils(unittest.TestCase):
     """test utils.py"""
@@ -16,7 +16,7 @@ class TestUtils(unittest.TestCase):
             zip('()|*\\ea',
                 ['\(', '\)', '\|', '\*', '\\\\', 'e', 'a'])
         for case in cases:
-            self.assertEqual(pyre.escape(case[0]), case[1])
+            self.assertEqual(yare.escape(case[0]), case[1])
 
     def test_group(self):
         """test : group"""
@@ -24,7 +24,7 @@ class TestUtils(unittest.TestCase):
             ('abcde', '(abcde)'),
         ]
         for case in cases:
-            self.assertEqual(pyre.group(case[0]), case[1])
+            self.assertEqual(yare.group(case[0]), case[1])
 
     def test_select(self):
         """test : select"""
@@ -37,7 +37,7 @@ class TestUtils(unittest.TestCase):
             (['a|b', 'c|a'], '(a|b|c|a)'),
         ]
         for case in cases:
-            self.assertEqual(pyre.select(case[0]), case[1])
+            self.assertEqual(yare.select(case[0]), case[1])
 
     def test_concat(self):
         """test : concat"""
@@ -48,7 +48,7 @@ class TestUtils(unittest.TestCase):
             (['a'], '(a)'),
         ]
         for case in cases:
-            self.assertEqual(pyre.concat(case[0]), case[1])
+            self.assertEqual(yare.concat(case[0]), case[1])
 
     def test_loop(self):
         """test : loop"""
@@ -57,7 +57,7 @@ class TestUtils(unittest.TestCase):
             ('(abcde)', '(((abcde))*)'),
         ]
         for case in cases:
-            self.assertEqual(pyre.loop(case[0]), case[1])
+            self.assertEqual(yare.loop(case[0]), case[1])
 
     def test_diff(self):
         """test : diff"""
@@ -66,7 +66,7 @@ class TestUtils(unittest.TestCase):
             (list(string.printable), '()'),
         ]
         for case in cases:
-            self.assertEqual(pyre.diff(case[0]), case[1])
+            self.assertEqual(yare.diff(case[0]), case[1])
 
     def test_loop_(self):
         """test : loop_"""
@@ -74,7 +74,7 @@ class TestUtils(unittest.TestCase):
             ('abcde', '((abcde)((abcde)*))'),
         ]
         for case in cases:
-            self.assertEqual(pyre.loop_(case[0]), case[1])
+            self.assertEqual(yare.loop_(case[0]), case[1])
 
     def test_optional(self):
         """test : optional"""
@@ -85,7 +85,7 @@ class TestUtils(unittest.TestCase):
             ('a|b', '(a|b|\\e)'),
         ]
         for case in cases:
-            self.assertEqual(pyre.optional(case[0]), case[1])
+            self.assertEqual(yare.optional(case[0]), case[1])
 
 
 if __name__ == '__main__':

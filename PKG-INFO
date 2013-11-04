@@ -1,12 +1,12 @@
 Metadata-Version: 1.0
-Name: pyre
+Name: yare
 Version: 0.4.3
-Summary: Python Regular Expression
+Summary: Yet Another Python Regular Expression
 Author: Leonardo Huang
 Author-email: leon@njuopen.com
 License: GPL v2
 Description:
-        PYRE is a simple regular expression library implemented in Python.
+        YARE is a simple regular expression library implemented in Python.
         It is fit for teaching and learning.
         It is compatible with both Python 2 and Python 3.
 

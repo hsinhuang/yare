@@ -3,10 +3,10 @@
 
 """demo for package pyre"""
 
-import pyre
+import yare
 
-regex = pyre.compile('(a|b)*a(a|b)')
+regex = yare.compile('(a|b)*a(a|b)')
 print regex.match('aa')
 # >>> True
-print pyre.match(regex, 'aab')
+print yare.match(regex, 'aab')
 # >>> True

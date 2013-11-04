@@ -6,13 +6,13 @@
 """unit test cases for the package"""
 
 import unittest
-import pyre
+import yare
 
 class TestSimpleEpsilon(unittest.TestCase):
     """simple test case: epsilon"""
     def setUp(self):
         """compile a regex"""
-        self.__regex__ = pyre.compile('a|\\e')
+        self.__regex__ = yare.compile('a|\\e')
     def test_match(self):
         """test method `match`"""
         positive = [ 'a', '' ]
@@ -40,7 +40,7 @@ class TestSimpleSelection(unittest.TestCase):
     """simple test case: selection"""
     def setUp(self):
         """compile a regex"""
-        self.__regex__ = pyre.compile('a|b')
+        self.__regex__ = yare.compile('a|b')
     def test_match(self):
         """test method `match`"""
         positive = [ 'a', 'b' ]
@@ -68,7 +68,7 @@ class TestSimpleConcatenation(unittest.TestCase):
     """simple test case: concatenation"""
     def setUp(self):
         """compile a regex"""
-        self.__regex__ = pyre.compile('ab')
+        self.__regex__ = yare.compile('ab')
     def test_match(self):
         """test method `match`"""
         positive = [ 'ab' ]
@@ -96,7 +96,7 @@ class TestSimpleLoop(unittest.TestCase):
     """simple test case: loop"""
     def setUp(self):
         """compile a regex"""
-        self.__regex__ = pyre.compile('a*')
+        self.__regex__ = yare.compile('a*')
     def test_match(self):
         """test method `match`"""
         negative = [ ' ', '\\', '\\e', 'b' ]
@@ -122,7 +122,7 @@ class TestCase1(unittest.TestCase):
     """complex test case 1"""
     def setUp(self):
         """compile a regex"""
-        self.__regex__ = pyre.compile('a*b|cd')
+        self.__regex__ = yare.compile('a*b|cd')
     def test_match(self):
         """test method `match`"""
         positive = [ 'b', 'ab', 'aab', 'cd' ]
@@ -151,7 +151,7 @@ class TestCase2(unittest.TestCase):
     """complex test case 2"""
     def setUp(self):
         """compile a regex"""
-        self.__regex__ = pyre.compile('a*(b|c)d')
+        self.__regex__ = yare.compile('a*(b|c)d')
     def test_match(self):
         """test method `match`"""
         positive = [ 'bd', 'abd', 'acd', 'cd' ]
@@ -182,7 +182,7 @@ class TestCase3(unittest.TestCase):
     """complex test case 3"""
     def setUp(self):
         """compile a regex"""
-        self.__regex__ = pyre.compile('a*(b|c\))d')
+        self.__regex__ = yare.compile('a*(b|c\))d')
     def test_match(self):
         """test method `match`"""
         positive = [ 'bd', 'abd', 'ac)d', 'c)d' ]
@@ -213,7 +213,7 @@ class TestCase4(unittest.TestCase):
     """complex test case 4"""
     def setUp(self):
         """compile a regex"""
-        self.__regex__ = pyre.compile('a(\*b|c)d')
+        self.__regex__ = yare.compile('a(\*b|c)d')
     def test_match(self):
         """test method `match`"""
         positive = [ 'a*bd', 'acd' ]
@@ -242,7 +242,7 @@ class TestCase5(unittest.TestCase):
     """complex test case 5"""
     def setUp(self):
         """compile a regex"""
-        self.__regex__ = pyre.compile('a*b\|cd')
+        self.__regex__ = yare.compile('a*b\|cd')
     def test_match(self):
         """test method `match`"""
         positive = [ 'b|cd', 'ab|cd', 'aaab|cd' ]
@@ -270,7 +270,7 @@ class TestCase6(unittest.TestCase):
     """complex test case 6"""
     def setUp(self):
         """compile a regex"""
-        self.__regex__ = pyre.compile('(a|b)*a(a|b)(a|b)(a|b)')
+        self.__regex__ = yare.compile('(a|b)*a(a|b)(a|b)(a|b)')
     def test_match(self):
         """test method `match`"""
         positive = [ 'aaaa', 'abbb', 'abab', 'abba', 'aabb', 'aaab',
@@ -306,7 +306,7 @@ class TestException(unittest.TestCase):
         """test method `compile`"""
         raisable = [ 'a(b', ')a', 'a\(b|c)a*b' ]
         for case in raisable:
-            self.assertRaises(SyntaxError, pyre.compile, case)
+            self.assertRaises(SyntaxError, yare.compile, case)
 
 if __name__ == '__main__':
     unittest.main()
