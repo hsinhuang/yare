@@ -109,6 +109,6 @@ def range(start, end):
         raise TypeError('require type `str`, but get `%s`' % end)
     assert start < end and len(start) == len(end) == 1
     all_letters = string.printable
-    return select(
+    return select(list(
         all_letters[all_letters.index(start):all_letters.index((end))]
-    )
+    ))
