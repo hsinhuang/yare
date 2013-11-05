@@ -3,7 +3,7 @@
 
 """init file of the package"""
 
-from pyre.fa import FA
+from fa import FA
 
 class State:
     """state"""
@@ -78,7 +78,7 @@ class RegEx:
 
 def compile(pattern, dfa=True):
     """compile a pattern to RegEx"""
-    from pyre.reyacc import build
+    from reyacc import build
     try:
         graph = build(pattern)
         if not graph:

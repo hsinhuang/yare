@@ -7,10 +7,10 @@
 
 import ply.yacc as yacc
 
-from pyre.relex import tokens
+from relex import tokens
 
-from pyre.regex import State, StateGraph
-from pyre.fa import EPSILON
+from regex import State, StateGraph
+from fa import EPSILON
 
 # Get the token map from the lexer
 

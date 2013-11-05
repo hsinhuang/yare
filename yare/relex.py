@@ -7,7 +7,7 @@
 
 import ply.lex as lex
 
-from pyre.fa import EPSILON
+from fa import EPSILON
 
 # List of token names
 tokens = (
