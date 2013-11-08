@@ -1,3 +1,7 @@
 The YARE to-do list:
 
+0. change the way to parse string: not relying on ply 
+
 1. complete document
+
+2. optimize
