@@ -230,8 +230,6 @@ def parse(re_str):
     __end__ = Elem(__END__, '', __END__, istream.offset())
     tokens.append(__end__)
     input_stack = list(reversed(tokens))
-    for elem in input_stack:
-        print elem
     state_stack = [ 0 ]
     parse_stack = []
     while input_stack:
