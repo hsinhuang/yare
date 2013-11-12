@@ -78,7 +78,7 @@ class RegEx:
 
 def compile(pattern, dfa=True):
     """compile a pattern to RegEx"""
-    from reyacc import build
+    from parser import build
     try:
         graph = build(pattern)
         if not graph:
