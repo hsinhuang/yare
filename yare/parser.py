@@ -66,37 +66,101 @@ class ReStream:
         """getter : offset in total"""
         return self.__offset__
 
+__goto_table__ = (
+    { 's' : 1, 't' : 2, 'x' : 3 }, # 0
+    {}, # 1
+    {}, # 2
+    { 't' : 9, 'x' : 10 }, # 3
+    { 's' : 11, 't' : 14, 'x' : 17 }, # 4
+    {}, # 5
+    {}, # 6
+    { 's' : 8, 't' : 2, 'x' : 3 }, # 7
+    {}, # 8
+    {}, # 9
+    { 't' : 9, 'x' : 10 }, # 10
+    {}, # 11
+    {}, # 12
+    {}, # 13
+    {}, # 14
+    { 's' : 16, 't' : 14, 'x' : 17 }, # 15
+    {}, # 16
+    { 't' : 18, 'x' : 17 }, # 17
+    {}, # 18
+)
+
 def reduce1(state_stack, parse_stack, input_stack):
     """reduce => s : t"""
-    pass
+    state_stack.pop()
+    assert parse_stack.pop() == 't'
+    state_stack.append(__goto_table__[state_stack[-1]]['s'])
+    parse_stack.append('s')
 
 def reduce2(state_stack, parse_stack, input_stack):
-    """reduce => s : t OR s"""
-    pass
+    """reduce => s : t | s"""
+    state_stack.pop()
+    assert parse_stack.pop() == 's'
+    state_stack.pop()
+    assert parse_stack.pop() == '|'
+    state_stack.pop()
+    assert parse_stack.pop() == 't'
+    state_stack.append(__goto_table__[state_stack[-1]]['s'])
+    parse_stack.append('s')
 
 def reduce3(state_stack, parse_stack, input_stack):
     """reduce => t : x"""
-    pass
+    state_stack.pop()
+    assert parse_stack.pop() == 'x'
+    state_stack.append(__goto_table__[state_stack[-1]]['t'])
+    parse_stack.append('t')
 
 def reduce4(state_stack, parse_stack, input_stack):
     """reduce => t : x t"""
-    pass
+    state_stack.pop()
+    assert parse_stack.pop() == 't'
+    state_stack.pop()
+    assert parse_stack.pop() == 'x'
+    state_stack.append(__goto_table__[state_stack[-1]]['t'])
+    parse_stack.append('t')
 
 def reduce5(state_stack, parse_stack, input_stack):
     """reduce => x : ( s )"""
-    pass
+    state_stack.pop()
+    assert parse_stack.pop() == ')'
+    state_stack.pop()
+    assert parse_stack.pop() == 's'
+    state_stack.pop()
+    assert parse_stack.pop() == '('
+    state_stack.append(__goto_table__[state_stack[-1]]['x'])
+    parse_stack.append('x')
 
 def reduce6(state_stack, parse_stack, input_stack):
     """reduce => x : ( s ) *"""
-    pass
+    state_stack.pop()
+    assert parse_stack.pop() == '*'
+    state_stack.pop()
+    assert parse_stack.pop() == ')'
+    state_stack.pop()
+    assert parse_stack.pop() == 's'
+    state_stack.pop()
+    assert parse_stack.pop() == '('
+    state_stack.append(__goto_table__[state_stack[-1]]['x'])
+    parse_stack.append('x')
 
 def reduce7(state_stack, parse_stack, input_stack):
     """reduce => x : F"""
-    pass
+    state_stack.pop()
+    assert parse_stack.pop() == 'F'
+    state_stack.append(__goto_table__[state_stack[-1]]['x'])
+    parse_stack.append('x')
 
 def reduce8(state_stack, parse_stack, input_stack):
     """reduce => x : F *"""
-    pass
+    state_stack.pop()
+    assert parse_stack.pop() == '*'
+    state_stack.pop()
+    assert parse_stack.pop() == 'F'
+    state_stack.append(__goto_table__[state_stack[-1]]['x'])
+    parse_stack.append('x')
 
 def __acc__(state_stack, parse_stack, input_stack):
     """function of accept"""
@@ -105,9 +169,10 @@ def __acc__(state_stack, parse_stack, input_stack):
 def __s__(state):
     """return a shift function to state"""
     def shift(state_stack, parse_stack, input_stack):
-        """"shift to state"""
+        """shift to state"""
         state_stack.append(state)
-        parse_stack.append(input_stack.pop())
+        parse_stack.append(input_stack.pop().lexical_unit())
+    shift.__doc__ = shift.__doc__ + ' %d' % state
     return shift
 
 def __r__(num):
@@ -135,32 +200,20 @@ __action_table__ = (
         '$' : __r__(5), }, # 12
     { '|' : __r__(6), '(' : __r__(6), 'F' : __r__(6), '$' : __r__(6), }, # 13
     { '|' : __s__(15), ')' : __r__(1) }, # 14
-    { '(' : __s__(4), 'F' : __s__(5), }, # 15
+    { '(' : __s__(19), 'F' : __s__(20), }, # 15
     { ')' : __r__(2) }, # 16
-    { '|' : __r__(3), '(' : __s__(4), ')' : __r__(3), 'F' : __s__(5), }, # 17
+    { '|' : __r__(3), '(' : __s__(19), ')' : __r__(3), 'F' : __s__(20), }, # 17
     { '|' : __r__(4), ')' : __r__(4), }, # 18
-)
-
-__goto_table__ = (
-    { 's' : 1, 't' : 2, 'x' : 3 }, # 0
-    {}, # 1
-    {}, # 2
-    { 't' : 9, 'x' : 10 }, # 3
-    { 's' : 11, 't' : 14, 'x' : 17 }, # 4
-    {}, # 5
-    {}, # 6
-    { 's' : 8, 't' : 2, 'x' : 3 }, # 7
-    {}, # 8
-    {}, # 9
-    { 't' : 9, 'x' : 10 }, # 10
-    {}, # 11
-    {}, # 12
-    {}, # 13
-    {}, # 14
-    { 's' : 16, 't' : 14, 'x' : 17 }, # 15
-    {}, # 16
-    { 't' : 18, 'x' : 17 }, # 17
-    {}, # 18
+    { '(' : __s__(19), 'F' : __s__(20), }, # 19
+    { '|' : __r__(7), '(' : __r__(7), ')': __r__(7), '*' : __s__(21),
+        'F' : __r__(7), '$' : __r__(7) }, # 20
+    { '|' : __r__(8), '(' : __r__(8), ')': __r__(8), 'F' : __r__(8),
+        '$' : __r__(8) }, # 21
+    { ')' : __s__(23) }, # 22
+    { '|' : __r__(5), '(' : __r__(5), ')': __r__(5), '*' : __s__(24),
+        'F' : __r__(5), '$' : __r__(5) }, # 23
+    { '|' : __r__(6), '(' : __r__(6), ')': __r__(6), 'F' : __r__(6),
+        '$' : __r__(6) }, # 24
 )
 
 def parse(re_str):
@@ -175,7 +228,8 @@ def parse(re_str):
     state_stack = [ 0 ]
     parse_stack = []
     while input_stack:
-        __action_table__[state_stack[-1]][input_stack[-1]](
+        print __action_table__[state_stack[-1]][input_stack[-1].lexical_unit()].__doc__
+        __action_table__[state_stack[-1]][input_stack[-1].lexical_unit()](
             state_stack, parse_stack, input_stack
         )
 
