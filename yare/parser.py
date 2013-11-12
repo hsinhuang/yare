@@ -290,7 +290,15 @@ def parse(re_str):
     state_stack = [ 0 ]
     parse_stack = []
     while input_stack:
-        __action_table__[state_stack[-1]][input_stack[-1].lexical_unit()](
+        ss_top, is_top = state_stack[-1], input_stack[-1]
+        if is_top.lexical_unit() not in __action_table__[ss_top]:
+            raise SyntaxError(
+                'unexpected %s in column %d' % \
+                    (is_top.value() if is_top.value() != __END__
+                        else 'line ending',
+                        is_top.offset())
+            )
+        __action_table__[ss_top][is_top.lexical_unit()](
             state_stack, parse_stack, input_stack
         )
     return parse_stack[0].graph
