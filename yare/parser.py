@@ -101,80 +101,81 @@ __goto_table__ = (
 def reduce1(state_stack, parse_stack, input_stack):
     """reduce => s : t"""
     state_stack.pop()
-    assert parse_stack.pop() == 't'
+    assert parse_stack.pop().lexical_unit() == 't'
     state_stack.append(__goto_table__[state_stack[-1]]['s'])
-    parse_stack.append('s')
+    parse_stack.append(Elem('s', 's', 's', 0))
 
 def reduce2(state_stack, parse_stack, input_stack):
     """reduce => s : t | s"""
     state_stack.pop()
-    assert parse_stack.pop() == 's'
+    assert parse_stack.pop().lexical_unit() == 's'
     state_stack.pop()
-    assert parse_stack.pop() == '|'
+    assert parse_stack.pop().lexical_unit() == '|'
     state_stack.pop()
-    assert parse_stack.pop() == 't'
+    assert parse_stack.pop().lexical_unit() == 't'
     state_stack.append(__goto_table__[state_stack[-1]]['s'])
-    parse_stack.append('s')
+    parse_stack.append(Elem('s', 's', 's', 0))
 
 def reduce3(state_stack, parse_stack, input_stack):
     """reduce => t : x"""
     state_stack.pop()
-    assert parse_stack.pop() == 'x'
+    assert parse_stack.pop().lexical_unit() == 'x'
     state_stack.append(__goto_table__[state_stack[-1]]['t'])
-    parse_stack.append('t')
+    parse_stack.append(Elem('t', 't', 't', 0))
 
 def reduce4(state_stack, parse_stack, input_stack):
     """reduce => t : x t"""
     state_stack.pop()
-    assert parse_stack.pop() == 't'
+    assert parse_stack.pop().lexical_unit() == 't'
     state_stack.pop()
-    assert parse_stack.pop() == 'x'
+    assert parse_stack.pop().lexical_unit() == 'x'
     state_stack.append(__goto_table__[state_stack[-1]]['t'])
-    parse_stack.append('t')
+    parse_stack.append(Elem('t', 't', 't', 0))
 
 def reduce5(state_stack, parse_stack, input_stack):
     """reduce => x : ( s )"""
     state_stack.pop()
-    assert parse_stack.pop() == ')'
+    assert parse_stack.pop().lexical_unit() == ')'
     state_stack.pop()
-    assert parse_stack.pop() == 's'
+    assert parse_stack.pop().lexical_unit() == 's'
     state_stack.pop()
-    assert parse_stack.pop() == '('
+    assert parse_stack.pop().lexical_unit() == '('
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
-    parse_stack.append('x')
+    parse_stack.append(Elem('x', 'x', 'x', 0))
 
 def reduce6(state_stack, parse_stack, input_stack):
     """reduce => x : ( s ) *"""
     state_stack.pop()
-    assert parse_stack.pop() == '*'
+    assert parse_stack.pop().lexical_unit() == '*'
     state_stack.pop()
-    assert parse_stack.pop() == ')'
+    assert parse_stack.pop().lexical_unit() == ')'
     state_stack.pop()
-    assert parse_stack.pop() == 's'
+    assert parse_stack.pop().lexical_unit() == 's'
     state_stack.pop()
-    assert parse_stack.pop() == '('
+    assert parse_stack.pop().lexical_unit() == '('
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
-    parse_stack.append('x')
+    parse_stack.append(Elem('x', 'x', 'x', 0))
 
 def reduce7(state_stack, parse_stack, input_stack):
     """reduce => x : F"""
     state_stack.pop()
-    assert parse_stack.pop() == 'F'
+    assert parse_stack.pop().lexical_unit() == 'F'
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
-    parse_stack.append('x')
+    parse_stack.append(Elem('x', 'x', 'x', 0))
 
 def reduce8(state_stack, parse_stack, input_stack):
     """reduce => x : F *"""
     state_stack.pop()
-    assert parse_stack.pop() == '*'
+    assert parse_stack.pop().lexical_unit() == '*'
     state_stack.pop()
-    assert parse_stack.pop() == 'F'
+    assert parse_stack.pop().lexical_unit() == 'F'
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
-    parse_stack.append('x')
+    parse_stack.append(Elem('x', 'x', 'x', 0))
 
 def __acc__(state_stack, parse_stack, input_stack):
     """function of accept"""
-    assert state_stack == [ 0, 1 ] and parse_stack == [ 's' ]
+    assert state_stack == [ 0, 1 ] and len(parse_stack) == 1 and \
+        parse_stack[0].lexical_unit() == 's'
     input_stack.pop()
 
 def __s__(state):
@@ -182,7 +183,7 @@ def __s__(state):
     def shift(state_stack, parse_stack, input_stack):
         """shift to state"""
         state_stack.append(state)
-        parse_stack.append(input_stack.pop().lexical_unit())
+        parse_stack.append(input_stack.pop())
     shift.__doc__ = shift.__doc__ + ' %d' % state
     return shift
 
