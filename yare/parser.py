@@ -293,7 +293,7 @@ def parse(re_str):
         __action_table__[state_stack[-1]][input_stack[-1].lexical_unit()](
             state_stack, parse_stack, input_stack
         )
-    return parse_stack[0]
+    return parse_stack[0].graph
 
 def build(pattern):
     """build a state graph based on the pattern"""
