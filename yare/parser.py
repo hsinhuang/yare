@@ -16,6 +16,10 @@ class Elem:
         self.__raw_str__ = raw_str
         self.__value__ = value
         self.__offset__ = offset
+        s0 = State()
+        s1 = State()
+        s0.link(s1, self.__value__)
+        self.graph = StateGraph(s0, s1)
     def __str__(self):
         return '`%s`, at column %d, of type %s' % \
             (self.__value__, self.__offset__, self.__lexical__)
