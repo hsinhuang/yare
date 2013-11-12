@@ -86,6 +86,12 @@ __goto_table__ = (
     {}, # 16
     { 't' : 18, 'x' : 17 }, # 17
     {}, # 18
+    { 's' : 22, 't' : 14, 'x' : 17 }, # 19
+    {}, # 20
+    {}, # 21
+    {}, # 22
+    {}, # 23
+    {}, # 24
 )
 
 def reduce1(state_stack, parse_stack, input_stack):
@@ -165,6 +171,7 @@ def reduce8(state_stack, parse_stack, input_stack):
 def __acc__(state_stack, parse_stack, input_stack):
     """function of accept"""
     assert state_stack == [ 0, 1 ] and parse_stack == [ 's' ]
+    input_stack.pop()
 
 def __s__(state):
     """return a shift function to state"""
@@ -228,7 +235,6 @@ def parse(re_str):
     state_stack = [ 0 ]
     parse_stack = []
     while input_stack:
-        print __action_table__[state_stack[-1]][input_stack[-1].lexical_unit()].__doc__
         __action_table__[state_stack[-1]][input_stack[-1].lexical_unit()](
             state_stack, parse_stack, input_stack
         )
