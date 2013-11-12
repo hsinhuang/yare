@@ -101,74 +101,91 @@ __goto_table__ = (
 def reduce1(state_stack, parse_stack, input_stack):
     """reduce => s : t"""
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == 't'
+    p1 = parse_stack.pop()
+    assert p1.lexical_unit() == 't'
     state_stack.append(__goto_table__[state_stack[-1]]['s'])
     parse_stack.append(Elem('s', 's', 's', 0))
 
 def reduce2(state_stack, parse_stack, input_stack):
     """reduce => s : t | s"""
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == 's'
+    p3 = parse_stack.pop()
+    assert p3.lexical_unit() == 's'
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == '|'
+    p2 = parse_stack.pop()
+    assert p2.lexical_unit() == '|'
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == 't'
+    p1 = parse_stack.pop()
+    assert p1.lexical_unit() == 't'
     state_stack.append(__goto_table__[state_stack[-1]]['s'])
     parse_stack.append(Elem('s', 's', 's', 0))
 
 def reduce3(state_stack, parse_stack, input_stack):
     """reduce => t : x"""
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == 'x'
+    p1 = parse_stack.pop()
+    assert p1.lexical_unit() == 'x'
     state_stack.append(__goto_table__[state_stack[-1]]['t'])
     parse_stack.append(Elem('t', 't', 't', 0))
 
 def reduce4(state_stack, parse_stack, input_stack):
     """reduce => t : x t"""
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == 't'
+    p2 = parse_stack.pop()
+    assert p2.lexical_unit() == 't'
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == 'x'
+    p1 = parse_stack.pop()
+    assert p1.lexical_unit() == 'x'
     state_stack.append(__goto_table__[state_stack[-1]]['t'])
     parse_stack.append(Elem('t', 't', 't', 0))
 
 def reduce5(state_stack, parse_stack, input_stack):
     """reduce => x : ( s )"""
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == ')'
+    p3 = parse_stack.pop()
+    assert p3.lexical_unit() == ')'
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == 's'
+    p2 = parse_stack.pop()
+    assert p2.lexical_unit() == 's'
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == '('
+    p1 = parse_stack.pop()
+    assert p1.lexical_unit() == '('
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
     parse_stack.append(Elem('x', 'x', 'x', 0))
 
 def reduce6(state_stack, parse_stack, input_stack):
     """reduce => x : ( s ) *"""
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == '*'
+    p4 = parse_stack.pop()
+    assert p4.lexical_unit() == '*'
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == ')'
+    p3 = parse_stack.pop()
+    assert p3.lexical_unit() == ')'
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == 's'
+    p2 = parse_stack.pop()
+    assert p2.lexical_unit() == 's'
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == '('
+    p1 = parse_stack.pop()
+    assert p1.lexical_unit() == '('
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
     parse_stack.append(Elem('x', 'x', 'x', 0))
 
 def reduce7(state_stack, parse_stack, input_stack):
     """reduce => x : F"""
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == 'F'
+    p1 = parse_stack.pop()
+    assert p1.lexical_unit() == 'F'
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
     parse_stack.append(Elem('x', 'x', 'x', 0))
 
 def reduce8(state_stack, parse_stack, input_stack):
     """reduce => x : F *"""
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == '*'
+    p2 = parse_stack.pop()
+    assert p2.lexical_unit() == '*'
     state_stack.pop()
-    assert parse_stack.pop().lexical_unit() == 'F'
+    p1 = parse_stack.pop()
+    assert p1.lexical_unit() == 'F'
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
     parse_stack.append(Elem('x', 'x', 'x', 0))
 
