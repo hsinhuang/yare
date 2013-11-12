@@ -104,7 +104,9 @@ def reduce1(state_stack, parse_stack, input_stack):
     p1 = parse_stack.pop()
     assert p1.lexical_unit() == 't'
     state_stack.append(__goto_table__[state_stack[-1]]['s'])
-    parse_stack.append(Elem('s', 's', 's', 0))
+    p0 = Elem('s', 's', 's', p1.offset())
+    p0.graph = p1.graph
+    parse_stack.append(p0)
 
 def reduce2(state_stack, parse_stack, input_stack):
     """reduce => s : t | s"""
@@ -118,7 +120,15 @@ def reduce2(state_stack, parse_stack, input_stack):
     p1 = parse_stack.pop()
     assert p1.lexical_unit() == 't'
     state_stack.append(__goto_table__[state_stack[-1]]['s'])
-    parse_stack.append(Elem('s', 's', 's', 0))
+    p0 = Elem('s', 's', 's', p1.offset())
+    s0 = State()
+    s1 = State()
+    p0.graph = StateGraph(s0, s1)
+    s0.link(p1.graph.start, EPSILON)
+    s0.link(p3.graph.start, EPSILON)
+    p1.graph.final.link(s1, EPSILON)
+    p3.graph.final.link(s1, EPSILON)
+    parse_stack.append(p0)
 
 def reduce3(state_stack, parse_stack, input_stack):
     """reduce => t : x"""
@@ -126,7 +136,9 @@ def reduce3(state_stack, parse_stack, input_stack):
     p1 = parse_stack.pop()
     assert p1.lexical_unit() == 'x'
     state_stack.append(__goto_table__[state_stack[-1]]['t'])
-    parse_stack.append(Elem('t', 't', 't', 0))
+    p0 = Elem('t', 't', 't', p1.offset())
+    p0.graph = p1.graph
+    parse_stack.append(p0)
 
 def reduce4(state_stack, parse_stack, input_stack):
     """reduce => t : x t"""
@@ -137,7 +149,10 @@ def reduce4(state_stack, parse_stack, input_stack):
     p1 = parse_stack.pop()
     assert p1.lexical_unit() == 'x'
     state_stack.append(__goto_table__[state_stack[-1]]['t'])
-    parse_stack.append(Elem('t', 't', 't', 0))
+    p0 = Elem('t', 't', 't', p1.offset())
+    p1.graph.final.link(p2.graph.start, EPSILON)
+    p0.graph = StateGraph(p1.graph.start, p2.graph.final)
+    parse_stack.append(p0)
 
 def reduce5(state_stack, parse_stack, input_stack):
     """reduce => x : ( s )"""
@@ -151,7 +166,9 @@ def reduce5(state_stack, parse_stack, input_stack):
     p1 = parse_stack.pop()
     assert p1.lexical_unit() == '('
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
-    parse_stack.append(Elem('x', 'x', 'x', 0))
+    p0 = Elem('x', 'x', 'x', p1.offset())
+    p0.graph = p2.graph
+    parse_stack.append(p0)
 
 def reduce6(state_stack, parse_stack, input_stack):
     """reduce => x : ( s ) *"""
@@ -168,7 +185,15 @@ def reduce6(state_stack, parse_stack, input_stack):
     p1 = parse_stack.pop()
     assert p1.lexical_unit() == '('
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
-    parse_stack.append(Elem('x', 'x', 'x', 0))
+    p0 = Elem('x', 'x', 'x', p1.offset())
+    s0 = State()
+    s1 = State()
+    p0.graph = StateGraph(s0, s1)
+    s0.link(p2.graph.start, EPSILON)
+    s0.link(s1, EPSILON)
+    p2.graph.final.link(s1, EPSILON)
+    p2.graph.final.link(s0, EPSILON)
+    parse_stack.append(p0)
 
 def reduce7(state_stack, parse_stack, input_stack):
     """reduce => x : F"""
@@ -176,7 +201,9 @@ def reduce7(state_stack, parse_stack, input_stack):
     p1 = parse_stack.pop()
     assert p1.lexical_unit() == 'F'
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
-    parse_stack.append(Elem('x', 'x', 'x', 0))
+    p0 = Elem('x', 'x', 'x', p1.offset())
+    p0.graph = p1.graph
+    parse_stack.append(p0)
 
 def reduce8(state_stack, parse_stack, input_stack):
     """reduce => x : F *"""
@@ -187,7 +214,15 @@ def reduce8(state_stack, parse_stack, input_stack):
     p1 = parse_stack.pop()
     assert p1.lexical_unit() == 'F'
     state_stack.append(__goto_table__[state_stack[-1]]['x'])
-    parse_stack.append(Elem('x', 'x', 'x', 0))
+    p0 = Elem('x', 'x', 'x', p1.offset())
+    s0 = State()
+    s1 = State()
+    p0.graph = StateGraph(s0, s1)
+    s0.link(p1.graph.start, EPSILON)
+    s0.link(s1, EPSILON)
+    p1.graph.final.link(s1, EPSILON)
+    p1.graph.final.link(s0, EPSILON)
+    parse_stack.append(p0)
 
 def __acc__(state_stack, parse_stack, input_stack):
     """function of accept"""
@@ -258,6 +293,7 @@ def parse(re_str):
         __action_table__[state_stack[-1]][input_stack[-1].lexical_unit()](
             state_stack, parse_stack, input_stack
         )
+    return parse_stack[0]
 
 def build(pattern):
     """build a state graph based on the pattern"""
