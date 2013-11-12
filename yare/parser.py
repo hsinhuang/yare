@@ -71,8 +71,97 @@ def reduce1(state_stack, parse_stack, input_stack):
     pass
 
 def reduce2(state_stack, parse_stack, input_stack):
-    """reduce => t OR s"""
+    """reduce => s : t OR s"""
     pass
+
+def reduce3(state_stack, parse_stack, input_stack):
+    """reduce => t : x"""
+    pass
+
+def reduce4(state_stack, parse_stack, input_stack):
+    """reduce => t : x t"""
+    pass
+
+def reduce5(state_stack, parse_stack, input_stack):
+    """reduce => x : ( s )"""
+    pass
+
+def reduce6(state_stack, parse_stack, input_stack):
+    """reduce => x : ( s ) *"""
+    pass
+
+def reduce7(state_stack, parse_stack, input_stack):
+    """reduce => x : F"""
+    pass
+
+def reduce8(state_stack, parse_stack, input_stack):
+    """reduce => x : F *"""
+    pass
+
+def __acc__(state_stack, parse_stack, input_stack):
+    """function of accept"""
+    assert state_stack == [ 0, 1 ] and parse_stack == [ 's' ]
+
+def __s__(state):
+    """return a shift function to state"""
+    def shift(state_stack, parse_stack, input_stack):
+        """"shift to state"""
+        state_stack.append(state)
+        parse_stack.append(input_stack.pop())
+    return shift
+
+def __r__(num):
+    """return a reduce function of number num"""
+    assert 1 <= num <= 8
+    reduces = [ None, reduce1, reduce2, reduce3, reduce4, reduce5,
+        reduce6, reduce7, reduce8 ]
+    return reduces[num]
+
+__action_table__ = (
+    { '(' : __s__(4), 'F' : __s__(5), }, # 0
+    { '$' : __acc__ }, # 1
+    { '|' : __s__(7), '$' : __r__(1) }, # 2
+    { '|' : __r__(3), '(' : __s__(4), 'F' : __s__(5), '$' : __r__(3), }, # 3
+    { '(' : __s__(4), 'F' : __s__(5) }, # 4
+    { '|' : __r__(7), '(' : __r__(7), '*' : __s__(6), 'F' : __r__(7),
+        '$' : __r__(7), }, # 5
+    { '|' : __r__(8), '(' : __r__(8), 'F' : __r__(8), '$' : __r__(8), }, # 6
+    { '(' : __s__(4), 'F' : __s__(5), }, # 7
+    { '$' : __r__(2) }, # 8
+    { '|' : __r__(4), '$' : __r__(4) }, # 9
+    { '|' : __r__(3), '(' : __s__(4), 'F' : __s__(5), '$' : __r__(3), }, # 10
+    { ')' : __s__(12) }, # 11
+    { '|' : __r__(5), '(' : __r__(5), '*' : __s__(13), 'F' : __r__(5),
+        '$' : __r__(5), }, # 12
+    { '|' : __r__(6), '(' : __r__(6), 'F' : __r__(6), '$' : __r__(6), }, # 13
+    { '|' : __s__(15), ')' : __r__(1) }, # 14
+    { '(' : __s__(4), 'F' : __s__(5), }, # 15
+    { ')' : __r__(2) }, # 16
+    { '|' : __r__(3), '(' : __s__(4), ')' : __r__(3), 'F' : __s__(5), }, # 17
+    { '|' : __r__(4), ')' : __r__(4), }, # 18
+)
+
+__goto_table__ = (
+    { 's' : 1, 't' : 2, 'x' : 3 }, # 0
+    {}, # 1
+    {}, # 2
+    { 't' : 9, 'x' : 10 }, # 3
+    { 's' : 11, 't' : 14, 'x' : 17 }, # 4
+    {}, # 5
+    {}, # 6
+    { 's' : 8, 't' : 2, 'x' : 3 }, # 7
+    {}, # 8
+    {}, # 9
+    { 't' : 9, 'x' : 10 }, # 10
+    {}, # 11
+    {}, # 12
+    {}, # 13
+    {}, # 14
+    { 's' : 16, 't' : 14, 'x' : 17 }, # 15
+    {}, # 16
+    { 't' : 18, 'x' : 17 }, # 17
+    {}, # 18
+)
 
 def parse(re_str):
     """main function to parse re string"""
@@ -85,8 +174,10 @@ def parse(re_str):
         print elem
     state_stack = [ 0 ]
     parse_stack = []
-    # while True:
-    #     pass
+    while input_stack:
+        __action_table__[state_stack[-1]][input_stack[-1]](
+            state_stack, parse_stack, input_stack
+        )
 
 def build(pattern):
     """build a state graph based on the pattern"""
