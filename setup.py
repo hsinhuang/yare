@@ -7,7 +7,7 @@ setup(name = "yare",
     description="Yet Another Python Regular Expression",
     long_description = """
 YARE is a simple regular expression library implemented in Python.
-It is fit for teaching and learning.
+It can be used for teaching and learning.
 It is compatible with both Python 2 and Python 3.
 """,
     license="""GPL v2""",
