@@ -1,7 +1,7 @@
-Version 0.4
+Version 0.5
 ----------------
 
-11/03/2013: leon-huang
+11/13/2013: leon-huang
             use LR(1) parsing table to parse input re, never
             relying on ply any longer
 
